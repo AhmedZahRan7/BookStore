@@ -1,18 +1,21 @@
 package sample.models;
 
+import sample.utilities.Categories;
+
 import java.util.Date;
 
 public class Book {
+
     private String ISBN;
+    private float price;
     private String title;
     private Integer noCopies;
     private Integer threshold;
-    private String category;
+    private Categories category;
     private String publisherName;
     private Date publicationYear;
-    private float price;
 
-    public Book(String ISBN, String title, Integer noCopies, Integer threshold, String category, String publisherName, Date publicationYear) {
+    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Categories category, String publisherName, Date publicationYear, float price) {
         this.ISBN = ISBN;
         this.title = title;
         this.noCopies = noCopies;
@@ -20,6 +23,7 @@ public class Book {
         this.category = category;
         this.publisherName = publisherName;
         this.publicationYear = publicationYear;
+        this.price = price;
     }
 
     public String getISBN() {
@@ -38,7 +42,7 @@ public class Book {
         return threshold;
     }
 
-    public String getCategory() {
+    public Categories getCategory() {
         return category;
     }
 
@@ -66,7 +70,7 @@ public class Book {
         this.threshold = threshold;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Categories category) {
         this.category = category;
     }
 

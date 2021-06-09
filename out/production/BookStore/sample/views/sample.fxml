@@ -10,8 +10,12 @@
           xmlns:fx="http://javafx.com/fxml" hgap="1" vgap="1"
           stylesheets="@style.css">
 
-    <VBox fx:id="leftBox" GridPane.columnIndex="0"></VBox>
-    <ListView fx:id="listView" GridPane.columnIndex="1"></ListView>
+    <VBox fx:id="leftBox" GridPane.columnIndex="0">
+
+    </VBox>
+    <ListView fx:id="listView" GridPane.columnIndex="1">
+
+    </ListView>
     <!--    <Label GridPane.rowIndex="0" style="-fx-font-size:20" >Enter a new node</Label>-->
 <!--    <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Node name :</Label>-->
 <!--    <TextField  fx:id="inputNewNode" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="100" maxHeight="20" />-->

@@ -9,6 +9,7 @@ public class User {
     private String firstName;
     private String email;
     private boolean manager;
+    // list of his credit cards
 
     public User(String userName, String password, String userID, String shippingAddress, String lastName, String firstName, String email, boolean manager) {
         this.userName = userName;
