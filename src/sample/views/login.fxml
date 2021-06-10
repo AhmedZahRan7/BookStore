@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane dividerPositions="0.41331923890063427" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.LoginController">
+
+   <items>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css">
+         <children>
+            <Group layoutX="33.0" layoutY="45.0">
+               <children>
+                  <Label layoutX="142.0" layoutY="158.0" text="LOGIN">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="userNameLogInField" layoutY="236.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Label layoutY="219.0" text="Username" />
+                  <Label layoutY="275.0" text="Password" />
+                  <PasswordField fx:id="passwordLogInField" layoutY="292.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Button fx:id="logInButton" layoutX="97.0" layoutY="352.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="126.0" text="LOGIN" />
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@book.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Group layoutX="115.0" layoutY="30.0">
+               <children>
+                  <Label layoutX="137.0" text="SIGN UP" />
+                  <Label layoutY="309.0" text="Re-Enter Password" />
+                  <PasswordField fx:id="repasswordField" layoutY="326.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Button fx:id="signupButton" layoutX="97.0" layoutY="381.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="126.0" text="SIGN UP" />
+                  <TextField fx:id="firstNameField" layoutY="75.0" prefHeight="25.0" prefWidth="138.0" />
+                  <Label layoutY="58.0" text="First name" />
+                  <TextField fx:id="userNameField" layoutY="125.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Label layoutY="108.0" text="Username" />
+                  <TextField fx:id="mailField" layoutY="178.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Label layoutY="161.0" text="E-mail" />
+                  <TextField fx:id="addressField" layoutY="226.0" prefHeight="25.0" prefWidth="319.0" />
+                  <Label layoutY="209.0" text="Shipping Address" />
+                  <TextField fx:id="lastNameField" layoutX="181.0" layoutY="75.0" prefHeight="25.0" prefWidth="138.0" />
+                  <Label layoutX="182.0" layoutY="58.0" text="Last name" />
+                  <Label layoutY="259.0" text="Password" />
+                  <PasswordField fx:id="passwordField" layoutY="276.0" prefHeight="25.0" prefWidth="319.0" />
+               </children>
+            </Group>
+         </children>
+      </AnchorPane>
+   </items>
+</SplitPane>

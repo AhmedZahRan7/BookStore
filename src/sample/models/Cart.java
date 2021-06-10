@@ -1,55 +1,73 @@
 package sample.models;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import sample.models.Book;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Cart {
-
-    private class Item {
-        public Book book;
-        public int noItem;
-
-        public Item(Book book) {
-            this.book = book;
-            this.noItem = 1;
-        }
-
-        public Item(Book book, int noItem) {
-            this.book = book;
-            this.noItem = noItem;
-        }
-
-    }
-
-    private List<Item> selectedBooks;
+    private Map<Book, Integer> selectedBooks;
     private float totalPrice;
+    private final int INITIAL_CAPACITY = 100;
 
     public Cart() {
-        this.selectedBooks = new ArrayList<>(10);
-        this.totalPrice = 0;
+        this.selectedBooks = new HashMap(this.INITIAL_CAPACITY);
+        this.totalPrice = 0.0F;
     }
 
-    public Cart(Book bookName) {
+    public Cart(Book book) {
         this();
-        this.selectedBooks.add(new Item(bookName));
-
+        this.addBook(book,  1);
     }
 
-    public Cart(Book bookName, int noItem) {
+    public Cart(Book book, int noItem) {
         this();
-        this.selectedBooks.add(new Item(bookName, noItem));
+        this.addBook(book, noItem);
     }
 
     public void addBook(Book book, int noItem) {
-        this.selectedBooks.add(new Item(book, noItem));
+        Book selectedBook = this.getSelectedBook(book.getISBN());
+        if(noItem > book.getNoCopies())
+            throw new IndexOutOfBoundsException();
+        if(selectedBook == null)
+            this.selectedBooks.put(book, noItem);
+        else
+            this.selectedBooks.put(book, this.selectedBooks.get(book) + noItem);
         this.totalPrice += noItem * book.getPrice();
     }
 
+    private Book getSelectedBook(String ISBN) {
+        for(Book book : this.selectedBooks.keySet())
+            if(book.getISBN() ==  ISBN)
+                return book;
+        return null;
+    }
+
+    public Set<Book> getSelectedBooks() {
+        return this.selectedBooks.keySet();
+    }
+
+    public int getTotalNumberOfBooksInCart() {
+        int temp = 0;
+        for(Integer i : this.selectedBooks.values())
+            temp += i;
+        return temp;
+    }
+
+    public int getNumberUniqueBooks() {
+        return this.selectedBooks.size();
+    }
+
+    public int getBookNumberOnTheCart(String ISBN) {
+        for(Book book : this.selectedBooks.keySet())
+            if(book.getISBN() ==  ISBN)
+                return this.selectedBooks.get(book);
+        return 0;
+    }
+
     public void showCart() {
-        for(Item item : this.selectedBooks)
-            System.out.println(item.book.getTitle() + " " + item.noItem);
+        for(Book book : this.selectedBooks.keySet()) {
+            System.out.println(book.getTitle() + " " + this.selectedBooks.get(book));
+        }
     }
 }
