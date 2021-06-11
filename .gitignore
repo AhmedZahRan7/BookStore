@@ -1,0 +1,10 @@
+.idea/*
+*.iml
+*.iws
+log/
+target/
+/out/*
+*.class
+*.txt
+pom.xml
+.DS_STORE.*
