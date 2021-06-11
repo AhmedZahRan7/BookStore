@@ -3,6 +3,7 @@ package sample.views;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -19,5 +20,12 @@ public class ViewsSwitcher {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(message);
+        alert.showAndWait();
     }
 }

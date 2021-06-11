@@ -10,11 +10,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.Repository.SearchContract;
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
+import sample.models.User;
+import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.*;
 
 public class UserInterfaceController {
     @FXML Button profileButton;
@@ -24,10 +29,18 @@ public class UserInterfaceController {
     @FXML Button searchButton;
     @FXML TextField searchTextField;
     @FXML TableView tableView;
+    final ObservableList<Book> books = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
+        tableView.setItems(books);
         initializeButtonsFunctions();
         initializeBooksTable();
-        setDataInTable(getDataFromDatabase());
+        try {
+            setDataInTableFromDataBase();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     void initializeBooksTable(){
         TableColumn<Book, String> isbn = new TableColumn<Book, String>("ISBN");
@@ -48,23 +61,62 @@ public class UserInterfaceController {
         title.setCellValueFactory(new PropertyValueFactory<Book,String>("Title"));
         noCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
         price.setCellValueFactory(new PropertyValueFactory<Book,String>("price"));
-        publisher.setCellValueFactory(new PropertyValueFactory<Book,String>("publisherName"));
-        category.setCellValueFactory(new PropertyValueFactory<Book,String>("Category"));
-        date.setCellValueFactory(new PropertyValueFactory<Book,String>("publicationYear"));
+        publisher.setCellValueFactory(tf->tf.getValue().getPublisher().getPublisherNameProb());
+        category.setCellValueFactory(tf->tf.getValue().getPublisher().getPublisherNameProb());
+        date.setCellValueFactory(new PropertyValueFactory<Book,String>("date_as_string"));
         tableView.getColumns().addAll(isbn,title,noCopies,price,publisher,category,date);
     }
-    void setDataInTable(ArrayList<Book> books){
-        final ObservableList<Book> data = FXCollections.observableArrayList(books);
-        tableView.setItems(data);
-    }
-    ArrayList<Book> getDataFromDatabase(){
-        /*todo: get data from backend*/
-        ArrayList<Book> books = new ArrayList<>();
+    void setDataInTableFromDataBase() throws SQLException, ClassNotFoundException {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    UserViewModel.get_instance().getBooks(null, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
-        return books;
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+                            for(Object o : data){
+                                books.add((Book) o);
+                            }
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
     }
     void initializeButtonsFunctions(){
-        /*todo: get type of user if user set false*/
         adminButton.setVisible(true);
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -98,7 +150,65 @@ public class UserInterfaceController {
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("search for " + searchTextField.getText().trim());
+                String searchFor = searchTextField.getText().trim();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        Map<String,Object> map = new HashMap<>();
+                        map.put(SearchContract.ISBN,searchFor);
+                        map.put(SearchContract.CATEGORY,searchFor);
+                        map.put(SearchContract.PRICE,searchFor);
+                        map.put(SearchContract.PUBLICATION_YEAR,searchFor);
+                        map.put(SearchContract.TITLE,searchFor);
+                        map.put(SearchContract.PUBLISHER_NAME,searchFor);
+                        if (searchFor.isEmpty()) map = null;
+                        try {
+                            UserViewModel.get_instance().getBooks(map, new IUserCallBack() {
+                                @Override
+                                public void onSuccess(User user) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Book book) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(List<Object> data) {
+                                    books.clear();
+                                    for(Object o : data){
+                                        books.add((Book) o);
+                                    }
+                                }
+
+                                @Override
+                                public void onSuccess() throws SQLException {
+
+                                }
+
+                                @Override
+                                public void onFailure() {
+
+                                }
+                            });
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
     }

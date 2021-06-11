@@ -21,15 +21,13 @@ public class UserViewModel {
         userCartBooks = new Cart();
         resultSetParser = new ResultSetParser();
         repo = new UserRepo();
-    };
+    }
 
     public static UserViewModel get_instance() throws SQLException, ClassNotFoundException {
             if(model == null)
                 return new UserViewModel();
             else return model;
     }
-
-
 
     public synchronized void getUser(String userName, String password, IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ResultSet set = repo.getUser(userName,password);
@@ -107,5 +105,8 @@ public class UserViewModel {
       callBack.onSuccess();
     }
 
+    public synchronized void updateUser(String userName, User newUser, IUserCallBack callBack) throws SQLException {
+//        callBack.onSuccess();
+    }
 
 }

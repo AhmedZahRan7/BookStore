@@ -1,5 +1,8 @@
 package sample.models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +11,21 @@ public class Publisher {
     private String Address;
     private String publisher_name;
     private List<String> phoneNumber;
-
+    private final StringProperty publisherNameProb  = new SimpleStringProperty();
     public Publisher(int id, String address, String name) {
         this.publisher_id = id;
         this.Address = address;
         this.publisher_name = name;
         this.phoneNumber = new ArrayList<>();
+    }
+
+    public StringProperty getPublisherNameProb() {
+        setPublisherNameProb(this.publisher_name);
+        return publisherNameProb;
+    }
+
+    public void setPublisherNameProb(String name) {
+        this.publisherNameProb.setValue(name);
     }
 
     public Publisher(int id, String address, String name, List<String> phoneNumber) {

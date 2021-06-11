@@ -21,7 +21,7 @@ public class UserRepo {
     public UserRepo() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(
-                "jdbc:mysql://41.45.231.176:3306/mydb?rewriteBatchedStatements=true", "zezo", "zezo");
+                "jdbc:mysql://localhost:3306/mydb?rewriteBatchedStatements=true", "test", "123456");
         selectUserStatement = con.prepareStatement("select * from user where user_name = ? and password = ? ");
         selectCartStatement = con.prepareStatement("select * from checkout natural join book where user_name = ?");
         writeCartStatement = con.prepareStatement("insert into checkout (isbn,nocopies,date,user_name) values (?,?,?,?)");

@@ -11,13 +11,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
 import sample.models.Checkout;
 import sample.models.User;
+import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class profileController {
     @FXML TextField firstNameField;
@@ -59,11 +63,58 @@ public class profileController {
         return list;
     }
     void initializeButtonsFunctions(){
+        firstNameField.setText(CurrentUser.getUser().getFirst_name());
+        lastNameField.setText(CurrentUser.getUser().getLast_name());
+        userNameField.setText(CurrentUser.getUser().getUser_name());
+        userNameField.setEditable(false);
+        mailField.setText(CurrentUser.getUser().getEmail());
+        addressField.setText(CurrentUser.getUser().getShipping_address());
+        passwordField.setText(CurrentUser.getUser().getPassword());
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("confirm Edits");
+                User user = new User(
+                        userNameField.getText().trim(),
+                        passwordField.getText().trim(),
+                        "",
+                        addressField.getText().trim(),
+                        lastNameField.getText().trim(),
+                        firstNameField.getText().trim(),
+                        mailField.getText().trim(),
+                        CurrentUser.getUser().isManager()
+                        );
+                try {
+                    UserViewModel.get_instance().updateUser(CurrentUser.getUser().getUser_name(), new User(), new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         backButton.setStyle("-fx-background-color: #FFCA33;");

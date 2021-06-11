@@ -17,6 +17,11 @@ public class Book {
     private Date publication_year;
     private final StringProperty isbnProperty = new SimpleStringProperty();
 
+    public String getDate_as_string() {
+        if(this.publication_year == null) return "NON";
+        return publication_year.toString();
+    }
+
     public Book(String ISBN, String title, Integer noCopies, Integer threshold, Catagory category, Publisher publisher, Date publicationYear, float price) {
         this.ISBN = ISBN;
         this.title = title;
