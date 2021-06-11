@@ -14,7 +14,7 @@
       <TableView fx:id="tableView" prefHeight="500.0" prefWidth="357.0" />
       <TextField fx:id="cardIdField" layoutX="475.0" layoutY="298.0" prefWidth="393.0" />
       <TextField fx:id="cvvField" layoutX="475.0" layoutY="346.0" prefHeight="25.0" prefWidth="71.0" />
-      <Button fx:id="checkButton" layoutX="627.0" layoutY="458.0" mnemonicParsing="false" text="Checkout" />
+      <Button fx:id="checkButton" layoutX="618.0" layoutY="443.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="107.0" text="Checkout" />
       <Label layoutX="478.0" layoutY="281.0" text="Card ID" />
       <Label layoutX="478.0" layoutY="329.0" text="CVV" />
       <Label layoutX="475.0" layoutY="377.0" text="Expiring Date" />
@@ -27,7 +27,7 @@
       </Text>
       <TextField fx:id="addField" layoutX="470.0" layoutY="110.0" prefHeight="25.0" prefWidth="152.0" />
       <TextField fx:id="removeField" layoutX="470.0" layoutY="161.0" prefHeight="25.0" prefWidth="152.0" />
-      <Button fx:id="addButton" layoutX="639.0" layoutY="109.0" mnemonicParsing="false" text="Add to my cart" />
+      <Button fx:id="addButton" layoutX="639.0" layoutY="109.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="169.0" text="Add to my cart" />
       <Button fx:id="removeButton" layoutX="639.0" layoutY="160.0" mnemonicParsing="false" text="Remove from my cart" />
       <Label layoutX="473.0" layoutY="88.0" text="Book ISBN" />
       <Label layoutX="473.0" layoutY="144.0" text="Book ISBN" />

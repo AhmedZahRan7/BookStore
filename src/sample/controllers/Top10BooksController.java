@@ -10,22 +10,31 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.Repository.ManagerRepo;
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
-import sample.models.BookSales;
-import sample.utilities.Categories;
+import sample.models.Cart;
+import sample.models.User;
+import sample.viewmodels.ManagerViewModel;
 import sample.views.ViewsSwitcher;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Top10BooksController {
     @FXML TableView topBooks;
     @FXML
     Button backButton;
-
+    ObservableList<Book> data;
     public void initialize(){
         initializeTable();
-        setTableData(getTopBooks());
+        data = FXCollections.observableArrayList(new ArrayList<>());
+        topBooks.setItems(data);
+
+        setTableData();
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -35,26 +44,52 @@ public class Top10BooksController {
         });
     }
     void initializeTable(){
-        TableColumn<BookSales, String> user = new TableColumn<BookSales, String>("Book");
-        TableColumn<BookSales, String> amount = new TableColumn<BookSales, String>("Sales");
+        TableColumn<Book, String> user = new TableColumn<Book, String>("ISBN");
+        TableColumn<Book, String> amount = new TableColumn<Book, String>("noCopies");
         user.setMinWidth(300);
         amount.setMinWidth(200);
-        user.setCellValueFactory(tf->tf.getValue().getBook().getIsbnProperty());
-        amount.setCellValueFactory(new PropertyValueFactory<BookSales,String>("amount"));
+        user.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
+        amount.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
         topBooks.getColumns().addAll(user,amount);
     }
 
-    void setTableData(ArrayList<BookSales> sales){
-        ObservableList<BookSales> data = FXCollections.observableArrayList(sales);
-        topBooks.setItems(data);
+    void setTableData(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    ManagerViewModel.get_instance().getTopTenBooks(new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                }
+                catch (Exception e){
+                }
+            }
+        }).start();
     }
-    ArrayList<BookSales> getTopBooks(){
-        ArrayList<BookSales> list = new ArrayList<>();
-        list.add(new BookSales(
-                new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20),
-                        20
-                )
-        );
-        return list;
-    }
+
 }

@@ -4,9 +4,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,12 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.models.Book;
-import sample.utilities.Categories;
 import sample.views.ViewsSwitcher;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 public class UserInterfaceController {
     @FXML Button profileButton;
@@ -42,13 +37,13 @@ public class UserInterfaceController {
         TableColumn<Book, String> publisher = new TableColumn<Book, String>("Publisher");
         TableColumn<Book, String> category = new TableColumn<Book, String>("Category");
         TableColumn<Book, String> date = new TableColumn<Book, String>("publicationYear");
-        isbn.setMinWidth(30);
-        title.setMinWidth(30);
-        noCopies.setMinWidth(30);
-        price.setMinWidth(30);
-        publisher.setMinWidth(30);
-        category.setMinWidth(30);
-        date.setMinWidth(30);
+        isbn.setMinWidth(150);
+        title.setMinWidth(100);
+        noCopies.setMinWidth(40);
+        price.setMinWidth(40);
+        publisher.setMinWidth(40);
+        category.setMinWidth(40);
+        date.setMinWidth(100);
         isbn.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
         title.setCellValueFactory(new PropertyValueFactory<Book,String>("Title"));
         noCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
@@ -65,22 +60,7 @@ public class UserInterfaceController {
     ArrayList<Book> getDataFromDatabase(){
         /*todo: get data from backend*/
         ArrayList<Book> books = new ArrayList<>();
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
+
         return books;
     }
     void initializeButtonsFunctions(){
@@ -97,7 +77,7 @@ public class UserInterfaceController {
             @Override
             public void handle(ActionEvent actionEvent) {
                 System.out.println("profile");
-
+                ViewsSwitcher.getInstance().switchTo((Stage) cartButton.getScene().getWindow(),"profile");
             }
         });
         cartButton.setOnAction(new EventHandler<ActionEvent>() {

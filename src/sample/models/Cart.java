@@ -43,8 +43,8 @@ public class Cart {
         return null;
     }
 
-    public Set<Book> getSelectedBooks() {
-        return this.selectedBooks.keySet();
+    public Map<Book,Integer> getSelectedBooks() {
+        return this.selectedBooks;
     }
 
     public int getTotalNumberOfBooksInCart() {

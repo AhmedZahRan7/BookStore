@@ -4,13 +4,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.models.Book;
-import sample.utilities.Categories;
 import sample.views.ViewsSwitcher;
 
 import java.util.ArrayList;
@@ -56,8 +54,6 @@ public class CheckoutController {
     ArrayList<Book> getCurrentCartBooks(){
         //get data of books in the cart
         ArrayList<Book> books = new ArrayList<>();
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
-        books.add(new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20));
         return books;
     }
     void initializeButtonsFunctions(){

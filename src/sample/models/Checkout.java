@@ -1,9 +1,5 @@
 package sample.models;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
-
 import java.util.Date;
 
 public class Checkout {
@@ -13,6 +9,7 @@ public class Checkout {
     private User user;
     private Date date;
     private int noOfCopies;
+
     public Checkout(long ID, Book book, User user, Date date, int noOfCopies) {
         this.ID = ID;
         this.book = book;
@@ -20,7 +17,6 @@ public class Checkout {
         this.date = date;
         this.noOfCopies = noOfCopies;
     }
-
 
     public long getID() {
         return ID;
@@ -61,5 +57,4 @@ public class Checkout {
     public void setNoOfCopies(int noOfCopies) {
         this.noOfCopies = noOfCopies;
     }
-
 }

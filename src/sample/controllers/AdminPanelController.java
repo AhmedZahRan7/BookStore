@@ -126,15 +126,14 @@ public class AdminPanelController {
     ArrayList<Order> getCurrentOrders(){
         //get data of books in the cart
         ArrayList<Order> books = new ArrayList<>();
-        books.add(new Order(4,"13321455414", 20));
-        books.add(new Order(5,"12365475521",40));
+
         return books;
     }
     void initializeOrdersTable(){
         TableColumn<Order,String> isbn = new TableColumn<Order, String>("ISBN");
         TableColumn<Order, String> noCopies = new TableColumn<Order, String>("#Copies");
         TableColumn<Order, String> orderId = new TableColumn<Order, String>("Order ID");
-        isbn.setMinWidth(150);
+        isbn.setMinWidth(120);
         noCopies.setMinWidth(30);
         orderId.setMinWidth(30);
         isbn.setCellValueFactory(new PropertyValueFactory<Order,String>("ISBN"));

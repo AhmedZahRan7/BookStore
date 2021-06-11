@@ -4,43 +4,52 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class User {
-    private String userName;
-    private String password;
-    private String userID;
-    private String shippingAddress;
-    private String lastName;
-    private String firstName;
-    private String email;
-    private boolean manager;
-    // list of his credit cards
 
+    private String user_name;
+    private String password;
+    private String last_name;
+    private String first_name;
+    private String email;
+    private String shipping_address;
+    private Integer manager;
+    private Integer total_purchases;
     private final StringProperty userProperty = new SimpleStringProperty();
-    public User(String userName, String password, String userID, String shippingAddress, String lastName, String firstName, String email, boolean manager) {
-        this.userName = userName;
+
+// list of his credit cards
+
+    public User(String userName, String password, String userID, String shippingAddress, String lastName, String firstName, String email, Integer manager) {
+        this.user_name = userName;
         this.password = password;
-        this.userID = userID;
-        this.shippingAddress = shippingAddress;
-        this.lastName = lastName;
-        this.firstName = firstName;
+        //  this.shipping_address = shippingAddress;
+        this.last_name = lastName;
+        this.first_name = firstName;
         this.email = email;
         this.manager = manager;
         userProperty.setValue(userName);
+        total_purchases = 0;
     }
-
     public StringProperty getUserProperty() {
         return userProperty;
     }
 
-    public StringProperty userPropertyProperty() {
-        return userProperty;
+    public User() {
+
     }
 
-    public String getUserName() {
-        return userName;
+    public Integer getTotal_purchases() {
+        return total_purchases;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setTotal_purchases(Integer total_purchases) {
+        this.total_purchases = total_purchases;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getPassword() {
@@ -51,36 +60,29 @@ public class User {
         this.password = password;
     }
 
-    public String getUserID() {
-        return userID;
+
+    public String getShipping_address() {
+        return shipping_address;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setShipping_address(String shipping_address) {
+        this.shipping_address = shipping_address;
     }
 
-    public String getShippingAddress() {
-        return shippingAddress;
+    public String getLast_name() {
+        return this.last_name;
     }
 
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setLast_name(String astName) {
+        this.last_name = astName;
     }
 
-    public String getLastName() {
-        return this.lastName;
+    public String getFirst_name() {
+        return this.first_name;
     }
 
-    public void setLastName(String astName) {
-        this.lastName = astName;
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
     public String getEmail() {
@@ -91,11 +93,11 @@ public class User {
         this.email = email;
     }
 
-    public boolean isManager() {
+    public Integer isManager() {
         return manager;
     }
 
-    public void setManager(boolean manager) {
+    public void setManager(Integer manager) {
         this.manager = manager;
     }
 }

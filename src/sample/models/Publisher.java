@@ -4,29 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Publisher {
-    private String id;
+    private int publisher_id;
     private String Address;
-    private String Name;
+    private String publisher_name;
     private List<String> phoneNumber;
 
-    public Publisher(String id, String address, String name) {
-        this.id = id;
+    public Publisher(int id, String address, String name) {
+        this.publisher_id = id;
         this.Address = address;
-        this.Name = name;
+        this.publisher_name = name;
         this.phoneNumber = new ArrayList<>();
     }
 
-    public Publisher(String id, String address, String name, List<String> phoneNumber) {
+    public Publisher(int id, String address, String name, List<String> phoneNumber) {
         this(id, address, name);
         this.phoneNumber = phoneNumber;
     }
 
-    public String getId() {
-        return id;
+    public Publisher() {
+
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public int getPublisher_id() {
+        return publisher_id;
+    }
+
+    public void setPublisher_id(int publisher_id) {
+        this.publisher_id = publisher_id;
     }
 
     public String getAddress() {
@@ -37,12 +41,12 @@ public class Publisher {
         Address = address;
     }
 
-    public String getName() {
-        return Name;
+    public String getPublisher_name() {
+        return publisher_name;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setPublisher_name(String publisher_name) {
+        this.publisher_name = publisher_name;
     }
 
     public List<String> getPhoneNumber() {

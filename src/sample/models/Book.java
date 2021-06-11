@@ -2,9 +2,8 @@ package sample.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import sample.utilities.Categories;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Book {
 
@@ -13,29 +12,28 @@ public class Book {
     private String title;
     private Integer noCopies;
     private Integer threshold;
-    private Categories category;
-    private String publisherName;
-    private Date publicationYear;
-    //value to be shown in table instead of pointer
+    private Catagory catagory;
+    private Publisher publisher;
+    private Date publication_year;
     private final StringProperty isbnProperty = new SimpleStringProperty();
-    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Categories category, String publisherName, Date publicationYear, float price) {
+
+    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Catagory category, Publisher publisher, Date publicationYear, float price) {
         this.ISBN = ISBN;
         this.title = title;
         this.noCopies = noCopies;
         this.threshold = threshold;
-        this.category = category;
-        this.publisherName = publisherName;
-        this.publicationYear = publicationYear;
+        this.catagory = category;
+        this.publisher = publisher;
+        this.publication_year = publicationYear;
         this.price = price;
         this.isbnProperty.setValue(ISBN);
     }
-
     public StringProperty getIsbnProperty() {
         return isbnProperty;
     }
 
-    public StringProperty isbnPropertyProperty() {
-        return isbnProperty;
+    public Book() {
+
     }
 
     public String getISBN() {
@@ -54,16 +52,16 @@ public class Book {
         return threshold;
     }
 
-    public Categories getCategory() {
-        return category;
+    public Catagory getCatagory() {
+        return catagory;
     }
 
-    public String getPublisherName() {
-        return publisherName;
+    public Publisher getPublisher() {
+        return publisher;
     }
 
-    public Date getPublicationYear() {
-        return publicationYear;
+    public Date getPublication_year() {
+        return publication_year;
     }
 
     public void setISBN(String ISBN) {
@@ -82,16 +80,16 @@ public class Book {
         this.threshold = threshold;
     }
 
-    public void setCategory(Categories category) {
-        this.category = category;
+    public void setCatagory(Catagory catagory) {
+        this.catagory = catagory;
     }
 
-    public void setPublisherName(String publisherName) {
-        this.publisherName = publisherName;
+    public void setPublisherName(Publisher publisher) {
+        this.publisher = publisher;
     }
 
-    public void setPublicationYear(Date publicationYear) {
-        this.publicationYear = publicationYear;
+    public void setPublication_year(Date publication_year) {
+        this.publication_year = publication_year;
     }
 
     public float getPrice() {

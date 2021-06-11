@@ -10,14 +10,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
-import sample.models.Checkout;
 import sample.models.User;
-import sample.utilities.Categories;
+import sample.viewmodels.ManagerViewModel;
 import sample.views.ViewsSwitcher;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 public class LastMonthReportController {
     @FXML TableView monthlyTable;
@@ -26,7 +27,7 @@ public class LastMonthReportController {
 
     public void initialize(){
         initializeTable();
-        setTableData(getLastMonthCheckouts());
+//        setTableData(getLastMonthCheckouts());
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -36,36 +37,48 @@ public class LastMonthReportController {
         });
     }
     void initializeTable(){
-        TableColumn<Checkout,String> id = new TableColumn<Checkout, String>("Checkout ID");
-        TableColumn<Checkout, String> book = new TableColumn<Checkout, String>("Book");
-        TableColumn<Checkout, String> user = new TableColumn<Checkout, String>("User");
-        TableColumn<Checkout, String> date = new TableColumn<Checkout, String>("Date");
-        TableColumn<Checkout, String> noOfCopies = new TableColumn<Checkout, String>("Number Of Copies");
+        TableColumn<Book, String> book = new TableColumn<Book, String>("Book");
+        TableColumn<Book, String> noOfCopies = new TableColumn<Book, String>("Number Of Copies");
         book.setMinWidth(150);
-        id.setMinWidth(150);
-        user.setMinWidth(150);
-        date.setMinWidth(150);
         noOfCopies.setMinWidth(150);
-        book.setCellValueFactory(tf->tf.getValue().getBook().getIsbnProperty());
-        id.setCellValueFactory(new PropertyValueFactory<Checkout,String>("ID"));
-        user.setCellValueFactory(tf->tf.getValue().getUser().getUserProperty());
-        date.setCellValueFactory(new PropertyValueFactory<Checkout,String>("date"));
-        noOfCopies.setCellValueFactory(new PropertyValueFactory<Checkout,String>("noOfCopies"));
-        monthlyTable.getColumns().addAll(id,book,user,noOfCopies,date);
+        book.setCellValueFactory(new PropertyValueFactory<Book,String>("date"));
+        noOfCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noOfCopies"));
+        monthlyTable.getColumns().addAll(book,noOfCopies);
     }
-    void setTableData(ArrayList<Checkout> checkouts){
-        ObservableList<Checkout> data = FXCollections.observableArrayList(checkouts);
+    void setTableData(List<Book> checkouts){
+        ObservableList<Book> data = FXCollections.observableArrayList(checkouts);
         monthlyTable.setItems(data);
     }
-    ArrayList<Checkout> getLastMonthCheckouts(){
-        ArrayList<Checkout> list = new ArrayList<>();
-        list.add(new Checkout(1235654,
-                new Book("12345678912","title",10,5, Categories.ART,"Publisher", new Date(),20),
-                new User("name","12345","12354","5 Famous st","Ali","Ahmed","mail@mail",false),
-                new Date(),
-                20
-                )
-        );
-        return list;
+    void getLastMonthCheckouts(){
+        try{
+           ManagerViewModel.get_instance().getSalesLastMonth(new IUserCallBack() {
+               @Override
+               public void onSuccess(User user) {
+
+               }
+
+               @Override
+               public void onSuccess(Book book) {
+
+               }
+
+               @Override
+               public void onSuccess(List<Object> data) {
+
+               }
+
+               @Override
+               public void onSuccess() throws SQLException {
+
+               }
+
+               @Override
+               public void onFailure() {
+
+               }
+           });
+        }
+        catch (Exception e){
+        }
     }
 }

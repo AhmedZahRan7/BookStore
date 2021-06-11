@@ -3,20 +3,10 @@ package sample.models;
 public class Order {
     private String ISBN;
     private int noOfCopies;
-    private int orderID;
 
-    public Order(int orderID,String ISBN, int noOfCopies) {
+    public Order(String ISBN, int noOfCopies) {
         this.ISBN = ISBN;
         this.noOfCopies = noOfCopies;
-        this.orderID = orderID;
-    }
-
-    public int getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
     }
 
     public String getISBN() {

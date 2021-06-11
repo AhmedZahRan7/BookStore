@@ -10,11 +10,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.Repository.ManagerRepo;
+import sample.callBacks.IUserCallBack;
+import sample.models.Book;
 import sample.models.User;
-import sample.models.UserPurchase;
+import sample.viewmodels.ManagerViewModel;
 import sample.views.ViewsSwitcher;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Top5CustomersController {
     @FXML TableView customersTable;
@@ -23,7 +28,7 @@ public class Top5CustomersController {
 
     public void initialize(){
         initializeTable();
-        setTableData(getTopCustomers());
+//        setTableData(getTopCustomers());
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -33,26 +38,49 @@ public class Top5CustomersController {
         });
     }
     void initializeTable(){
-        TableColumn<UserPurchase, String> user = new TableColumn<UserPurchase, String>("User");
-        TableColumn<UserPurchase, String> amount = new TableColumn<UserPurchase, String>("Amount");
+        TableColumn<User, String> user = new TableColumn<User, String>("User");
+        TableColumn<User, String> amount = new TableColumn<User, String>("Amount");
         user.setMinWidth(300);
         amount.setMinWidth(200);
-        user.setCellValueFactory(tf->tf.getValue().getUser().getUserProperty());
-        amount.setCellValueFactory(new PropertyValueFactory<UserPurchase,String>("amount"));
+        user.setCellValueFactory(new PropertyValueFactory<User,String>("user_name"));
+        amount.setCellValueFactory(new PropertyValueFactory<User,String>("total_purchases"));
         customersTable.getColumns().addAll(user,amount);
     }
 
-    void setTableData(ArrayList<UserPurchase> purchases){
-        ObservableList<UserPurchase> data = FXCollections.observableArrayList(purchases);
+    void setTableData(List<User> purchases){
+        ObservableList<User> data = FXCollections.observableArrayList(purchases);
         customersTable.setItems(data);
     }
-    ArrayList<UserPurchase> getTopCustomers(){
-        ArrayList<UserPurchase> list = new ArrayList<>();
-        list.add(new UserPurchase(
-                        new User("name","12345","12354","5 Famous st","Ali","Ahmed","mail@mail",false),
-                        20.0
-                )
-        );
-        return list;
+    void getTopCustomers(){
+        try{
+            ManagerViewModel.get_instance().getTop5CustomersLastThreeMonths(new IUserCallBack() {
+                @Override
+                public void onSuccess(User user) {
+
+                }
+
+                @Override
+                public void onSuccess(Book book) {
+
+                }
+
+                @Override
+                public void onSuccess(List<Object> data) {
+
+                }
+
+                @Override
+                public void onSuccess() throws SQLException {
+
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
+        }
+        catch (Exception e){
+        }
     }
 }
