@@ -1,5 +1,4 @@
 package sample.Repository;
-
 public class SearchContract {
     // map < key , value>
     public final static String ISBN = "isbn";
@@ -11,4 +10,8 @@ public class SearchContract {
     public final static String PUBLISHER_ADDRESS = "address";
     public final static String EMAIL = "email";
     public final static String USER_NAME = "user_name";
+    public final static String NOCOPIES = "nocopies";
+    public final static String THRESHOLD = "threshold";
+    public final static String PUBLISHER_ID = "publisher_id";
+    public final static String CATEGORY_ID = "catagory_id";
 }

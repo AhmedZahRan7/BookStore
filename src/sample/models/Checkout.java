@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class Checkout {
 
-    private long ID;
-    private Book book;
-    private User user;
-    private Date date;
+    private String ID;
+    private String book;
+    private String user;
+    private String date;
     private int noOfCopies;
 
-    public Checkout(long ID, Book book, User user, Date date, int noOfCopies) {
+    public Checkout(String ID, String book, String user, String date, int noOfCopies) {
         this.ID = ID;
         this.book = book;
         this.user = user;
@@ -18,35 +18,39 @@ public class Checkout {
         this.noOfCopies = noOfCopies;
     }
 
-    public long getID() {
+    public Checkout() {
+
+    }
+
+    public String getID() {
         return ID;
     }
 
-    public void setID(long ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 
-    public Book getBook() {
+    public String getBook() {
         return book;
     }
 
-    public void setBook(Book book) {
+    public void setBook(String book) {
         this.book = book;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

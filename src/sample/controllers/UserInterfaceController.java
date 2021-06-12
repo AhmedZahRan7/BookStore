@@ -46,7 +46,7 @@ public class UserInterfaceController {
         TableColumn<Book, String> isbn = new TableColumn<Book, String>("ISBN");
         TableColumn<Book, String> title = new TableColumn<>("Title");
         TableColumn<Book, String> noCopies = new TableColumn<Book, String>("#Copies");
-        TableColumn<Book, String> price = new TableColumn<Book, String>("Price");
+        TableColumn<Book, Float> price = new TableColumn<Book, Float>("Price");
         TableColumn<Book, String> publisher = new TableColumn<Book, String>("Publisher");
         TableColumn<Book, String> category = new TableColumn<Book, String>("Category");
         TableColumn<Book, String> date = new TableColumn<Book, String>("publicationYear");
@@ -60,9 +60,9 @@ public class UserInterfaceController {
         isbn.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
         title.setCellValueFactory(new PropertyValueFactory<Book,String>("Title"));
         noCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
-        price.setCellValueFactory(new PropertyValueFactory<Book,String>("price"));
+        price.setCellValueFactory(new PropertyValueFactory<Book, Float>("price"));
         publisher.setCellValueFactory(tf->tf.getValue().getPublisher().getPublisherNameProb());
-        category.setCellValueFactory(tf->tf.getValue().getPublisher().getPublisherNameProb());
+        category.setCellValueFactory(tf->tf.getValue().getCatagory().getGategoryProp());
         date.setCellValueFactory(new PropertyValueFactory<Book,String>("date_as_string"));
         tableView.getColumns().addAll(isbn,title,noCopies,price,publisher,category,date);
     }
@@ -117,7 +117,7 @@ public class UserInterfaceController {
         }).start();
     }
     void initializeButtonsFunctions(){
-        adminButton.setVisible(true);
+//        if(CurrentUser.getUser().isManager() == 0) adminButton.setVisible(false);
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -154,13 +154,8 @@ public class UserInterfaceController {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-
                         Map<String,Object> map = new HashMap<>();
                         map.put(SearchContract.ISBN,searchFor);
-                        map.put(SearchContract.CATEGORY,searchFor);
-                        map.put(SearchContract.PRICE,searchFor);
-                        map.put(SearchContract.PUBLICATION_YEAR,searchFor);
                         map.put(SearchContract.TITLE,searchFor);
                         map.put(SearchContract.PUBLISHER_NAME,searchFor);
                         if (searchFor.isEmpty()) map = null;

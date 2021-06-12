@@ -1,4 +1,6 @@
 package sample.controllers;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,11 +11,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.models.Book;
+import sample.models.User;
+import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
+class CartEntry{
+    StringProperty isbn = new SimpleStringProperty();
+    StringProperty copies = new SimpleStringProperty();
+    public CartEntry(String isbn, Integer copies){
+        this.isbn.setValue(isbn);
+        this.copies.setValue(copies.toString());
+    }
+
+}
 public class CheckoutController {
     @FXML TextField cardIdField;
     @FXML TextField cvvField;
@@ -26,36 +42,43 @@ public class CheckoutController {
     @FXML DatePicker dateField;
     @FXML TableView tableView;
     @FXML Text costLabel;
+    final ObservableList<CartEntry> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeButtonsFunctions();
+        tableView.setItems(data);
         initializeCartTable();
-        setDataInTable(getCurrentCartBooks());
+        setDataInTable();
     }
     void initializeCartTable(){
-        TableColumn<Book,String> isbn = new TableColumn<Book, String>("ISBN");
-        TableColumn<Book, String> title = new TableColumn<>("Title");
-        TableColumn<Book, String> noCopies = new TableColumn<Book, String>("#Copies");
-        TableColumn<Book, String> price = new TableColumn<Book, String>("Price");
-        isbn.setMinWidth(100);
-        title.setMinWidth(30);
-        noCopies.setMinWidth(30);
-        price.setMinWidth(30);
-        isbn.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
-        title.setCellValueFactory(new PropertyValueFactory<Book,String>("title"));
-        noCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
-        price.setCellValueFactory(new PropertyValueFactory<Book,String>("price"));
-        tableView.getColumns().addAll(isbn,title,noCopies,price);
+        TableColumn<CartEntry,String> isbn = new TableColumn<CartEntry, String>("ISBN");
+        TableColumn<CartEntry, String> noCopies = new TableColumn<CartEntry, String>("#Copies");
+        isbn.setMinWidth(150);
+        noCopies.setMinWidth(150);
+        isbn.setCellValueFactory(tf->tf.getValue().isbn);
+        noCopies.setCellValueFactory(tf->tf.getValue().copies);
+        tableView.getColumns().addAll(isbn,noCopies);
     }
-    void setDataInTable(ArrayList<Book> books){
-        /*todo:get data from cart*/
-        final ObservableList<Book> data = FXCollections.observableArrayList(books);
-        tableView.setItems(data);
+    void setDataInTable(){
+        data.clear();
+        try{
+            costLabel.setText(UserViewModel.get_instance().getCart().getTotalPrice().toString());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            for ( Map.Entry<Book,Integer> entry : UserViewModel.get_instance().getCart().getSelectedBooks().entrySet()){
+                data.add(new CartEntry(entry.getKey().getISBN(),entry.getValue()));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-    ArrayList<Book> getCurrentCartBooks(){
-        //get data of books in the cart
-        ArrayList<Book> books = new ArrayList<>();
-        return books;
-    }
+
     void initializeButtonsFunctions(){
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -67,13 +90,38 @@ public class CheckoutController {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent){
-                System.out.println("Add " + addField.getText().trim());
+                try {
+                    UserViewModel.get_instance().addToCart(addField.getText().trim(),1);
+                    removeField.setText("");
+                    setDataInTable();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         removeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent){
-                System.out.println("Remove " + removeButton.getText().trim());
+                try {
+                    UserViewModel.get_instance().removeFromCart(addField.getText().trim());
+                    removeField.setText("");
+                    setDataInTable();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                setDataInTable();
             }
         });
         checkButton.setOnAction(new EventHandler<ActionEvent>() {

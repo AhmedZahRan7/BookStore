@@ -3,6 +3,8 @@ package sample.viewmodels;
 import sample.Repository.ManagerRepo;
 import sample.callBacks.IUserCallBack;
 import sample.models.Book;
+import sample.models.Order;
+import sample.models.Publisher;
 import sample.models.User;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,12 +23,14 @@ public class ManagerViewModel extends UserViewModel{
     }
 
     public static ManagerViewModel get_instance() throws SQLException, ClassNotFoundException {
-        if(model == null)
-            return new ManagerViewModel();
-        else return model;
+        if(model == null) {
+            model =  new ManagerViewModel();
+        }
+        return model;
     }
 
     public synchronized  void promoteUser(String user_name, IUserCallBack callBack) throws SQLException {
+        System.out.println(user_name + "PROMOTION");
         repo.promoteUser(user_name);
         callBack.onSuccess();
     }
@@ -41,9 +45,9 @@ public class ManagerViewModel extends UserViewModel{
        callBack.onSuccess();
     }
 
-    public synchronized void addBooks(List<Book> books, IUserCallBack callBack) throws SQLException {
-       repo.addBooks(books);
-       callBack.onSuccess();
+    public synchronized void addBooks(Map<String,Object> map, IUserCallBack callBack) throws SQLException {
+        repo.addBook(map);
+        callBack.onSuccess();
     }
 
     public synchronized void addPublisher(String address, String publisherName, IUserCallBack callBack) throws SQLException {
@@ -70,8 +74,6 @@ public class ManagerViewModel extends UserViewModel{
         repo.modifyBooks(setAttribute,whereAttribute);
         callBack.onSuccess();
     }
-
-
 
     public synchronized void removeBooks (Map<String,Object> searchAttribute,IUserCallBack userCallBack) throws SQLException {
        repo.removeBooks(searchAttribute);
@@ -109,5 +111,19 @@ public class ManagerViewModel extends UserViewModel{
             list.add(user);
         }
         callBack.onSuccess(list);
+    }
+    public synchronized void getOrders(IUserCallBack callBack) throws SQLException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        ResultSet rs = repo.getOrders();
+        List<Object> list = new ArrayList<>();
+        while (rs.next()){
+            Order order = resultSetParser.retrieveOrder(rs);
+            list.add(order);
+        }
+        callBack.onSuccess(list);
+    }
+    public Publisher getPublisher(int id) throws SQLException {
+//        ResultSet set = repo.getPublisher(id);
+//        resultSetParser.
+        return new Publisher();
     }
 }

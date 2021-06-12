@@ -24,9 +24,10 @@ public class UserViewModel {
     }
 
     public static UserViewModel get_instance() throws SQLException, ClassNotFoundException {
-            if(model == null)
-                return new UserViewModel();
-            else return model;
+        if(model == null) {
+            model = new UserViewModel();
+        }
+        return model;
     }
 
     public synchronized void getUser(String userName, String password, IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -37,8 +38,6 @@ public class UserViewModel {
         }
         callBack.onSuccess(user);
     }
-
-
 
     public synchronized void getBook(String ISBN ,IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ResultSet rs = repo.getBookWithIsbn(ISBN);
@@ -75,8 +74,9 @@ public class UserViewModel {
                 book = resultSetParser.retrieveBook(rs);
                 if (book.getNoCopies() < NOCopies)
                     throw new IndexOutOfBoundsException();
-                else
+                else{
                     userCartBooks.addBook(book, NOCopies);
+                }
             }else throw new SQLException();
         }
         return userCartBooks;
@@ -86,10 +86,17 @@ public class UserViewModel {
         return userCartBooks;
     }
 
-    public void removeCart() throws SQLException {
-        userCartBooks = null;
+    public void removeCart(){
+        userCartBooks = new Cart();
     }
-
+    public void removeFromCart(String isbn) {
+        for(Map.Entry<Book,Integer> book : userCartBooks.getSelectedBooks().entrySet()){
+            if(book.getKey().getISBN().equals(isbn)){
+                userCartBooks.getSelectedBooks().remove(book);
+                break;
+            }
+        }
+    }
 
     public synchronized void addCreditCard(String cardNo,String expireDate,String userName,IUserCallBack userCallBack) throws  SQLException{
         repo.addCreditCard(cardNo,expireDate,userName);

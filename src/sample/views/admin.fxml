@@ -14,14 +14,14 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AdminPanelController">
    <children>
-      <Group layoutX="26.0" layoutY="81.0">
+      <Group layoutX="26.0" layoutY="68.0">
          <children>
             <TextField fx:id="ISBNAddField" layoutY="17.0" />
             <Label text="ISBN" />
             <TextField fx:id="titleAddField" layoutY="59.0" />
             <Label layoutY="42.0" text="Title" />
             <TextField fx:id="authorAddField" layoutY="101.0" />
-            <Label layoutY="84.0" text="Author" />
+            <Label layoutY="84.0" text="Number Of Copies" />
             <TextField fx:id="publisherAddField" layoutY="143.0" />
             <Label layoutY="126.0" text="Publisher ID" />
             <TextField fx:id="publicationAddField" layoutY="185.0" />
@@ -30,9 +30,10 @@
             <Label layoutY="209.0" text="Price" />
             <TextField fx:id="categoryAddField" layoutY="268.0" />
             <Label layoutY="251.0" text="Category ID" />
-            <Button fx:id="addBookButton" layoutX="18.0" layoutY="301.0" mnemonicParsing="false" text="Add Book" />
          </children>
       </Group>
+      <TextField fx:id="categoryAddField1" layoutX="26.0" layoutY="381.0" />
+      <Label layoutX="26.0" layoutY="361.0" text="Threshold" />
       <Line endX="-100.0" endY="315.0" layoutX="300.0" layoutY="88.0" startX="-100.0" stroke="#3a8ee8" />
       <Group layoutX="225.0" layoutY="88.0">
          <children>
@@ -77,6 +78,7 @@
             <Font name="Agency FB" size="38.0" />
          </font>
       </Text>
-      <Button fx:id="backButton"  layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="backButton" layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="addBookButton" layoutX="43.0" layoutY="414.0" mnemonicParsing="false" text="Add Book" />
    </children>
 </AnchorPane>

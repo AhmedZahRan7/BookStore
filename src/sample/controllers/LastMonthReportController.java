@@ -24,10 +24,11 @@ public class LastMonthReportController {
     @FXML TableView monthlyTable;
     @FXML
     Button backButton;
-
+    ObservableList<Book> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeTable();
-//        setTableData(getLastMonthCheckouts());
+        monthlyTable.setItems(data);
+        getLastMonthCheckouts();
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -41,44 +42,46 @@ public class LastMonthReportController {
         TableColumn<Book, String> noOfCopies = new TableColumn<Book, String>("Number Of Copies");
         book.setMinWidth(150);
         noOfCopies.setMinWidth(150);
-        book.setCellValueFactory(new PropertyValueFactory<Book,String>("date"));
-        noOfCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noOfCopies"));
+        book.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
+        noOfCopies.setCellValueFactory(new PropertyValueFactory<Book,String>("noCopies"));
         monthlyTable.getColumns().addAll(book,noOfCopies);
     }
-    void setTableData(List<Book> checkouts){
-        ObservableList<Book> data = FXCollections.observableArrayList(checkouts);
-        monthlyTable.setItems(data);
-    }
+
     void getLastMonthCheckouts(){
-        try{
-           ManagerViewModel.get_instance().getSalesLastMonth(new IUserCallBack() {
-               @Override
-               public void onSuccess(User user) {
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+               try{
+                   ManagerViewModel.get_instance().getSalesLastMonth(new IUserCallBack() {
+                       @Override
+                       public void onSuccess(User user) {
 
+                       }
+
+                       @Override
+                       public void onSuccess(Book book) {
+
+                       }
+
+                       @Override
+                       public void onSuccess(List<Object> books) {
+                           for (Object o : books) data.add((Book) o);
+                       }
+
+                       @Override
+                       public void onSuccess() throws SQLException {
+
+                       }
+
+                       @Override
+                       public void onFailure() {
+
+                       }
+                   });
                }
-
-               @Override
-               public void onSuccess(Book book) {
-
+               catch (Exception e){
                }
-
-               @Override
-               public void onSuccess(List<Object> data) {
-
-               }
-
-               @Override
-               public void onSuccess() throws SQLException {
-
-               }
-
-               @Override
-               public void onFailure() {
-
-               }
-           });
-        }
-        catch (Exception e){
-        }
+           }
+       }).start();
     }
 }

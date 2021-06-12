@@ -33,10 +33,10 @@ public class profileController {
     @FXML Button confirmButton;
     @FXML Button backButton;
     @FXML TableView checkOutsHistoryTable;
-
+    ObservableList<Checkout> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeTable();
-        setTableData(getMyCheckouts());
+        setTableData();
         initializeButtonsFunctions();
     }
     private void initializeTable(){
@@ -44,24 +44,21 @@ public class profileController {
         TableColumn<Checkout, String> book = new TableColumn<Checkout, String>("Book");
         TableColumn<Checkout, String> date = new TableColumn<Checkout, String>("Date");
         TableColumn<Checkout, String> noOfCopies = new TableColumn<Checkout, String>("Number Of Copies");
-        book.setMinWidth(150);
-        id.setMinWidth(150);
-        date.setMinWidth(150);
-        noOfCopies.setMinWidth(150);
-        book.setCellValueFactory(tf->tf.getValue().getBook().getIsbnProperty());
+        book.setMinWidth(100);
+        id.setMinWidth(100);
+        date.setMinWidth(100);
+        noOfCopies.setMinWidth(100);
+        book.setCellValueFactory(new PropertyValueFactory<Checkout,String>("book"));
         id.setCellValueFactory(new PropertyValueFactory<Checkout,String>("ID"));
         date.setCellValueFactory(new PropertyValueFactory<Checkout,String>("date"));
         noOfCopies.setCellValueFactory(new PropertyValueFactory<Checkout,String>("noOfCopies"));
         checkOutsHistoryTable.getColumns().addAll(id,book,noOfCopies,date);
     }
-    void setTableData(ArrayList<Checkout> checkouts){
-        ObservableList<Checkout> data = FXCollections.observableArrayList(checkouts);
+    void setTableData(){
         checkOutsHistoryTable.setItems(data);
+        //fun
     }
-    ArrayList<Checkout> getMyCheckouts(){
-        ArrayList<Checkout> list = new ArrayList<>();
-        return list;
-    }
+
     void initializeButtonsFunctions(){
         firstNameField.setText(CurrentUser.getUser().getFirst_name());
         lastNameField.setText(CurrentUser.getUser().getLast_name());
@@ -76,7 +73,6 @@ public class profileController {
                 User user = new User(
                         userNameField.getText().trim(),
                         passwordField.getText().trim(),
-                        "",
                         addressField.getText().trim(),
                         lastNameField.getText().trim(),
                         firstNameField.getText().trim(),

@@ -2,6 +2,7 @@ package sample.Repository;
 
 import sample.models.Book;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,12 +24,14 @@ public class ManagerRepo extends UserRepo{
     private PreparedStatement getBookSales;
     private PreparedStatement getTopCustomers;
     private PreparedStatement getTotalLastMonthsSales;
+    private PreparedStatement getPublisherStatement;
 
     public ManagerRepo() throws SQLException, ClassNotFoundException {
         super();
+        getPublisherStatement = con.prepareStatement("select from publisher where publisher_id = ?");
         promoteUserStatement = con.prepareStatement("update user set manager=1 where user_name = ?");
         orderBookStatement = con.prepareStatement("insert into orders (isbn,nocopies) values (?,?)");
-        confirmOrderStatement = con.prepareStatement("delete from orders where isbn = ?");
+        confirmOrderStatement = con.prepareStatement("delete from orders where orders_id = ?");
         addBookStatement = con.prepareStatement("insert into book " +
                 " (isbn,title,price,publication_year,nocopies,threshold,publisher_id,catagory_id) values (?,?,?,?,?,?,?,?)");
         addPublisherStatement = con.prepareStatement("insert into publisher (address,publisher_name) values (?,?) ");
@@ -62,7 +65,10 @@ public class ManagerRepo extends UserRepo{
         promoteUserStatement.setString(1,user_name);
         promoteUserStatement.executeUpdate();
     }
-
+    public ResultSet getPublisher (int publisher_id ) throws SQLException {
+        getPublisherStatement.setInt(1,publisher_id);
+        return  getPublisherStatement.executeQuery();
+    }
     public void orderBook(String ISBN, int NOCopies) throws SQLException {
      orderBookStatement.setString(1,ISBN);
      orderBookStatement.setInt(2,NOCopies);
@@ -74,24 +80,21 @@ public class ManagerRepo extends UserRepo{
      confirmOrderStatement.executeUpdate();
     }
 
-    public void addBooks(List<Book> books) throws SQLException {
-        int i=0;
-      for(Book book : books){
-          addBookStatement.setString(1,book.getISBN());
-          addBookStatement.setString(2,book.getTitle());
-          addBookStatement.setFloat(3,book.getPrice());
-          addBookStatement.setDate(4,book.getPublication_year());
-          addBookStatement.setInt(5,book.getNoCopies());
-          addBookStatement.setInt(6,book.getThreshold());
-          addBookStatement.setInt(7,book.getPublisher().getPublisher_id());
-         // addBookStatement.setInt(8,book.getCategory());
-
-          addBookStatement.addBatch();
-          i++;
-          if (i % 20 == 0 || i == books.size()) {
-              addBookStatement.executeBatch(); // Execute every 20 items.
-          }
-      }
+    public void addBook(Map<String,Object> map) throws SQLException {
+        addBookStatement.setString(1, (String) map.get(SearchContract.ISBN));
+        addBookStatement.setString(2,(String) map.get(SearchContract.TITLE));
+        addBookStatement.setFloat(3,(Float) map.get(SearchContract.PRICE));
+        addBookStatement.setString(4,(String) map.get(SearchContract.PUBLICATION_YEAR));
+        addBookStatement.setInt(5,(Integer) map.get(SearchContract.NOCOPIES));
+        addBookStatement.setInt(6,(Integer) map.get(SearchContract.THRESHOLD));
+        addBookStatement.setInt(7,(Integer) map.get(SearchContract.PUBLISHER_ID));
+        addBookStatement.setInt(8,(Integer) map.get(SearchContract.CATEGORY_ID));
+        addBookStatement.executeUpdate();
+    }
+    public ResultSet getOrders() throws SQLException {
+        String query = "select * from orders";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
     }
 
     public void addPublisher(String address, String publisherName) throws SQLException {

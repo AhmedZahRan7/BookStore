@@ -17,7 +17,7 @@ public class User {
 
 // list of his credit cards
 
-    public User(String userName, String password, String userID, String shippingAddress, String lastName, String firstName, String email, Integer manager) {
+    public User(String userName, String password, String shippingAddress, String lastName, String firstName, String email, Integer manager) {
         this.user_name = userName;
         this.password = password;
         //  this.shipping_address = shippingAddress;
