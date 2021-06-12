@@ -6,16 +6,6 @@ import javafx.beans.property.StringProperty;
 public class Catagory {
     private String catagory_name;
     private String catagory_id;
-    private final StringProperty gategoryProp  = new SimpleStringProperty();
-
-    public StringProperty getGategoryProp() {
-        setGategoryProp(catagory_name);
-        return gategoryProp;
-    }
-
-    public void setGategoryProp(String gategoryProp) {
-        this.gategoryProp.set(gategoryProp);
-    }
 
     public Catagory(String catagory_name, String catagory_id) {
         this.catagory_name = catagory_name;
@@ -25,7 +15,9 @@ public class Catagory {
     public Catagory() {
 
     }
-
+    public StringProperty getGategoryProp(){
+        return new SimpleStringProperty(catagory_name);
+    }
     public String getCatagory_name() {
         return catagory_name;
     }

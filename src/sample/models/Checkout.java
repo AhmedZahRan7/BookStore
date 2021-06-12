@@ -1,49 +1,49 @@
 package sample.models;
 
-import java.util.Date;
+
 
 public class Checkout {
 
-    private String ID;
-    private String book;
-    private String user;
+    private Integer Checkout_id;
+    private String ISBN;
+    private String user_name;
     private String date;
-    private int noOfCopies;
+    private Integer nocopies;
 
-    public Checkout(String ID, String book, String user, String date, int noOfCopies) {
-        this.ID = ID;
-        this.book = book;
-        this.user = user;
+    public Checkout(int checkout_id, String ISBN, String user_name, String date, int noCopies) {
+        this.Checkout_id = checkout_id;
+        this.ISBN = ISBN;
+        this.user_name = user_name;
         this.date = date;
-        this.noOfCopies = noOfCopies;
+        this.nocopies = noCopies;
     }
 
     public Checkout() {
 
     }
 
-    public String getID() {
-        return ID;
+    public int getCheckout_id() {
+        return Checkout_id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setCheckout_id(int checkout_id) {
+        this.Checkout_id = checkout_id;
     }
 
-    public String getBook() {
-        return book;
+    public String getISBN() {
+        return ISBN;
     }
 
-    public void setBook(String book) {
-        this.book = book;
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
     }
 
-    public String getUser() {
-        return user;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getDate() {
@@ -54,11 +54,11 @@ public class Checkout {
         this.date = date;
     }
 
-    public int getNoOfCopies() {
-        return noOfCopies;
+    public int getNocopies() {
+        return nocopies;
     }
 
-    public void setNoOfCopies(int noOfCopies) {
-        this.noOfCopies = noOfCopies;
+    public void setNocopies(int nocopies) {
+        this.nocopies = nocopies;
     }
 }

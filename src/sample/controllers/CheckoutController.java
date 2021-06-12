@@ -7,30 +7,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.models.Book;
-import sample.models.User;
 import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
-class CartEntry{
-    StringProperty isbn = new SimpleStringProperty();
-    StringProperty copies = new SimpleStringProperty();
-    public CartEntry(String isbn, Integer copies){
-        this.isbn.setValue(isbn);
-        this.copies.setValue(copies.toString());
-    }
 
-}
 public class CheckoutController {
+
     @FXML TextField cardIdField;
     @FXML TextField cvvField;
     @FXML TextField addField;
@@ -51,7 +41,7 @@ public class CheckoutController {
     }
     void initializeCartTable(){
         TableColumn<CartEntry,String> isbn = new TableColumn<CartEntry, String>("ISBN");
-        TableColumn<CartEntry, String> noCopies = new TableColumn<CartEntry, String>("#Copies");
+        TableColumn<CartEntry, String> noCopies = new TableColumn<CartEntry, String>("No. Copies");
         isbn.setMinWidth(150);
         noCopies.setMinWidth(150);
         isbn.setCellValueFactory(tf->tf.getValue().isbn);
@@ -61,7 +51,7 @@ public class CheckoutController {
     void setDataInTable(){
         data.clear();
         try{
-            costLabel.setText(UserViewModel.get_instance().getCart().getTotalPrice().toString());
+            costLabel.setText(String.valueOf(UserViewModel.get_instance().getCart().getTotalPurchase()));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -70,7 +60,7 @@ public class CheckoutController {
 
         try {
             for ( Map.Entry<Book,Integer> entry : UserViewModel.get_instance().getCart().getSelectedBooks().entrySet()){
-                data.add(new CartEntry(entry.getKey().getISBN(),entry.getValue()));
+                data.add(new CartEntry(entry.getKey().getISBN(), entry.getValue()));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -78,7 +68,6 @@ public class CheckoutController {
             e.printStackTrace();
         }
     }
-
     void initializeButtonsFunctions(){
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -92,7 +81,7 @@ public class CheckoutController {
             public void handle(ActionEvent actionEvent){
                 try {
                     UserViewModel.get_instance().addToCart(addField.getText().trim(),1);
-                    removeField.setText("");
+                    addField.setText("");
                     setDataInTable();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -113,7 +102,7 @@ public class CheckoutController {
             @Override
             public void handle(ActionEvent actionEvent){
                 try {
-                    UserViewModel.get_instance().removeFromCart(addField.getText().trim());
+                    UserViewModel.get_instance().removeFromCart(removeField.getText().trim());
                     removeField.setText("");
                     setDataInTable();
                 } catch (SQLException throwables) {
@@ -131,7 +120,17 @@ public class CheckoutController {
                 System.out.println(cardIdField.getText().trim());
                 System.out.println(cvvField.getText().trim());
                 System.out.println(dateField.getValue());
+//                UserViewModel.get_instance().checkout();
             }
         });
+    }
+    private static class CartEntry{
+        StringProperty isbn = new SimpleStringProperty();
+        StringProperty copies = new SimpleStringProperty();
+        public CartEntry(String isbn, Integer copies){
+            this.isbn.setValue(isbn);
+            this.copies.setValue(copies.toString());
+        }
+
     }
 }

@@ -1,23 +1,27 @@
 package sample.models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class CreditCard {
 
-    private String ID;  // credit card number
-    private Date expireDate;
-    private User owner;
+    private String card_id;  // credit card number
+    private Date exp_date;
+    private String user_name;
 
-    public CreditCard(String ID, User owner, Date expireDate) {
-        this.ID = ID;
-        this.expireDate = expireDate;
-        this.owner = owner;
+    public CreditCard(String ID, String owner, Date expireDate) {
+        this.card_id = ID;
+        this.exp_date = expireDate;
+        this.user_name = owner;
+    }
+
+    public CreditCard() {
+
     }
 
     public boolean validateNumber() {
         long intForm;
         try {
-            intForm = Long.parseUnsignedLong(this.ID);
+            intForm = Long.parseUnsignedLong(this.card_id);
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -26,33 +30,33 @@ public class CreditCard {
     }
 
     private boolean validateDate() {
-        Date now = new Date();
-        if (now.compareTo(getExpireDate()) != -1)
+        Date now = Date.valueOf(java.time.LocalDate.now());
+        if (now.compareTo(getExp_date()) != -1)
             return false;
         return true;
     }
 
-    public String getID() {
-        return ID;
+    public String getCard_id() {
+        return card_id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setCard_id(String card_id) {
+        this.card_id = card_id;
     }
 
-    public Date getExpireDate() {
-        return expireDate;
+    public Date getExp_date() {
+        return exp_date;
     }
 
-    public void setExpireDate(Date expireDate) {
-        this.expireDate = expireDate;
+    public void setExp_date(Date exp_date) {
+        this.exp_date = exp_date;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwner() {
+        return user_name;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwner(String owner) {
+        this.user_name = owner;
     }
 }

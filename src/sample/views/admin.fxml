@@ -20,7 +20,7 @@
             <Label text="ISBN" />
             <TextField fx:id="titleAddField" layoutY="59.0" />
             <Label layoutY="42.0" text="Title" />
-            <TextField fx:id="authorAddField" layoutY="101.0" />
+            <TextField fx:id="noCopiesField" layoutY="101.0" />
             <Label layoutY="84.0" text="Number Of Copies" />
             <TextField fx:id="publisherAddField" layoutY="143.0" />
             <Label layoutY="126.0" text="Publisher ID" />
@@ -32,7 +32,7 @@
             <Label layoutY="251.0" text="Category ID" />
          </children>
       </Group>
-      <TextField fx:id="categoryAddField1" layoutX="26.0" layoutY="381.0" />
+      <TextField fx:id="thresholdField" layoutX="26.0" layoutY="381.0" />
       <Label layoutX="26.0" layoutY="361.0" text="Threshold" />
       <Line endX="-100.0" endY="315.0" layoutX="300.0" layoutY="88.0" startX="-100.0" stroke="#3a8ee8" />
       <Group layoutX="225.0" layoutY="88.0">
@@ -47,17 +47,18 @@
          </children>
       </Group>
       <Line endX="-100.0" endY="315.0" layoutX="507.0" layoutY="88.0" startX="-100.0" stroke="#3a8ee8" />
-      <Group layoutX="436.0" layoutY="121.0">
+      <Group layoutX="436.0" layoutY="89.0">
          <children>
             <TextField fx:id="ISBNOrderField" layoutY="17.0" />
             <Label text="Book ISBN" />
             <TextField fx:id="noCopiesOrderField" layoutY="67.0" />
             <Label layoutY="50.0" text="Number Of Copies" />
             <Button fx:id="orderButton" layoutX="42.0" layoutY="103.0" mnemonicParsing="false" text="Order" />
-            <TextField fx:id="orderIdConfirmField" layoutY="196.0" />
-            <Label layoutY="179.0" text="Order ID" />
-            <Button fx:id="confirmButton" layoutX="14.0" layoutY="230.0" mnemonicParsing="false" text="Confirm Order" />
-            <Line endX="12.0" layoutX="118.0" layoutY="157.0" startX="-100.0" stroke="#3a8ee8" />
+            <TextField fx:id="orderIdConfirmField" layoutY="182.0" />
+            <Label layoutY="165.0" text="Order ID" />
+            <Button fx:id="confirmButton" layoutX="14.0" layoutY="216.0" mnemonicParsing="false" text="Confirm Order" />
+            <Line endX="12.0" layoutX="118.0" layoutY="152.0" startX="-100.0" stroke="#3a8ee8" />
+            <Line endX="12.0" layoutX="119.0" layoutY="264.0" startX="-100.0" stroke="#3a8ee8" />
          </children>
       </Group>
       <Line endX="-100.0" endY="315.0" layoutX="711.0" layoutY="89.0" startX="-100.0" stroke="#3a8ee8" />
@@ -80,5 +81,6 @@
       </Text>
       <Button fx:id="backButton" layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
       <Button fx:id="addBookButton" layoutX="43.0" layoutY="414.0" mnemonicParsing="false" text="Add Book" />
+      <Button fx:id="viewPublisherButton" layoutX="446.0" layoutY="379.0" mnemonicParsing="false" text="View Publishers" />
    </children>
 </AnchorPane>

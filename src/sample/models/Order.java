@@ -1,33 +1,33 @@
 package sample.models;
 
 public class Order {
+    private Integer Orders_id;
     private String ISBN;
-    private int noCopies;
-    private String orders_id;
-    public Order(String ISBN, int noOfCopies,String id) {
+    private Integer nocopies;
+
+    public Integer getOrders_id() {
+        return Orders_id;
+    }
+
+    public void setOrders_id(Integer orders_id) {
+        Orders_id = orders_id;
+    }
+
+    public Integer getNocopies() {
+        return nocopies;
+    }
+
+    public void setNocopies(Integer nocopies) {
+        this.nocopies = nocopies;
+    }
+
+    public Order(String ISBN, int noOfCopies) {
         this.ISBN = ISBN;
-        this.noCopies = noOfCopies;
-        this.orders_id = id;
+        this.nocopies = noOfCopies;
     }
 
     public Order() {
 
-    }
-
-    public int getNoCopies() {
-        return noCopies;
-    }
-
-    public void setNoCopies(int noCopies) {
-        this.noCopies = noCopies;
-    }
-
-    public String getOrders_id() {
-        return orders_id;
-    }
-
-    public void setOrders_id(String orders_id) {
-        this.orders_id = orders_id;
     }
 
     public String getISBN() {
@@ -38,4 +38,11 @@ public class Order {
         this.ISBN = ISBN;
     }
 
+    public int getNoOfCopies() {
+        return nocopies;
+    }
+
+    public void setNoOfCopies(int noOfCopies) {
+        this.nocopies = noOfCopies;
+    }
 }

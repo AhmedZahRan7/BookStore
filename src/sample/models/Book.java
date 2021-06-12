@@ -1,28 +1,17 @@
 package sample.models;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
-import java.sql.Date;
-
 public class Book {
 
     private String ISBN;
-    private float price;
+    private Float price;
     private String title;
     private Integer noCopies;
     private Integer threshold;
     private Catagory catagory;
     private Publisher publisher;
-    private Date publication_year;
-    private final StringProperty isbnProperty = new SimpleStringProperty();
+    private String publication_year;
 
-    public String getDate_as_string() {
-        if(this.publication_year == null) return "NON";
-        return publication_year.toString();
-    }
-
-    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Catagory category, Publisher publisher, Date publicationYear, float price) {
+    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Catagory category, Publisher publisher, String publicationYear, float price) {
         this.ISBN = ISBN;
         this.title = title;
         this.noCopies = noCopies;
@@ -31,10 +20,6 @@ public class Book {
         this.publisher = publisher;
         this.publication_year = publicationYear;
         this.price = price;
-        this.isbnProperty.setValue(ISBN);
-    }
-    public StringProperty getIsbnProperty() {
-        return isbnProperty;
     }
 
     public Book() {
@@ -65,7 +50,7 @@ public class Book {
         return publisher;
     }
 
-    public Date getPublication_year() {
+    public String  getPublication_year() {
         return publication_year;
     }
 
@@ -93,7 +78,7 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public void setPublication_year(Date publication_year) {
+    public void setPublication_year(String publication_year) {
         this.publication_year = publication_year;
     }
 
@@ -104,4 +89,7 @@ public class Book {
     public void setPrice(float price) {
         this.price = price;
     }
+
+
+
 }

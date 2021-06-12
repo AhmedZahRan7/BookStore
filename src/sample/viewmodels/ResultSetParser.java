@@ -17,6 +17,7 @@ public class ResultSetParser<T> {
     private List<Field> userFields;
     private List<Field> orderFields;
     private List<Field> checkoutFields;
+    private List<Field> creditCardFields;
     public ResultSetParser(){
         bookFields = Arrays.asList(Book.class.getDeclaredFields());
         publisherFields = Arrays.asList(Publisher.class.getDeclaredFields());
@@ -24,6 +25,9 @@ public class ResultSetParser<T> {
         userFields = Arrays.asList(User.class.getDeclaredFields());
         orderFields = Arrays.asList(Order.class.getDeclaredFields());
         checkoutFields = Arrays.asList(Checkout.class.getDeclaredFields());
+        creditCardFields = Arrays.asList(CreditCard.class.getDeclaredFields());
+
+        setAccessbility(creditCardFields);
         setAccessbility(orderFields);
         setAccessbility(checkoutFields);
         setAccessbility(bookFields);
@@ -67,6 +71,7 @@ public class ResultSetParser<T> {
     }
 
     protected void setField(ResultSet set, Object user, String name, Field f)throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+      //  System.out.println(f.getName() + " " + f.getType());
         if(f.getType() == String.class){
             String value = null;
             try {
@@ -76,7 +81,7 @@ public class ResultSetParser<T> {
             } catch (SQLException e) {
             }
         }
-        else if(f.getType().getTypeName().equals("int")) {
+        else if( f.getType() == Integer.class) {
             Integer value = null;
             try {
                 value = set.getInt(name);
@@ -92,7 +97,7 @@ public class ResultSetParser<T> {
                 System.out.println(name + " " + value);
             } catch (SQLException throwables) {
             }
-        }else if(f.getType().toString().equals("float")){
+        }else if(f.getType() == Float.class){
             Float value = null;
             try {
                 value = set.getFloat(name);
@@ -112,4 +117,15 @@ public class ResultSetParser<T> {
         }
     }
 
+    public Publisher retrievePublisher(ResultSet set) throws InvocationTargetException, SQLException, InstantiationException, NoSuchMethodException, IllegalAccessException {
+        Publisher publisher = new Publisher();
+        setAllFields(set,publisher , publisherFields);
+        return publisher;
+    }
+
+    public CreditCard retireveCard(ResultSet rs) throws InvocationTargetException, SQLException, InstantiationException, NoSuchMethodException, IllegalAccessException {
+        CreditCard card = new CreditCard();
+        setAllFields(rs,card ,creditCardFields);
+        return card;
+    }
 }

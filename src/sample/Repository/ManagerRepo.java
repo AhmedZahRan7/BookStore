@@ -1,6 +1,8 @@
 package sample.Repository;
 
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
+import sample.models.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -25,7 +27,7 @@ public class ManagerRepo extends UserRepo{
     private PreparedStatement getTopCustomers;
     private PreparedStatement getTotalLastMonthsSales;
     private PreparedStatement getPublisherStatement;
-
+    private PreparedStatement addUserStatement;
     public ManagerRepo() throws SQLException, ClassNotFoundException {
         super();
         getPublisherStatement = con.prepareStatement("select from publisher where publisher_id = ?");
@@ -58,6 +60,7 @@ public class ManagerRepo extends UserRepo{
                 "AND c.Date >= DATE_ADD(NOW(),INTERVAL -30 DAY)\n" +
                 "group by b.ISBN \n" +
                 "order by Total_Sales desc");
+
     }
 
 
@@ -65,18 +68,44 @@ public class ManagerRepo extends UserRepo{
         promoteUserStatement.setString(1,user_name);
         promoteUserStatement.executeUpdate();
     }
-    public ResultSet getPublisher (int publisher_id ) throws SQLException {
+
+
+
+
+    public synchronized ResultSet getAllUsers() throws SQLException {
+        String query = "select * from user";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+
+
+    public synchronized ResultSet getAllPublishers() throws SQLException {
+        String query = "select * from publisher";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+    public synchronized ResultSet getAllCheckout() throws SQLException {
+        String query = "select * from checkout";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+    public ResultSet getPublisher (Integer publisher_id ) throws SQLException {
         getPublisherStatement.setInt(1,publisher_id);
         return  getPublisherStatement.executeQuery();
     }
+
+
     public void orderBook(String ISBN, int NOCopies) throws SQLException {
      orderBookStatement.setString(1,ISBN);
      orderBookStatement.setInt(2,NOCopies);
      orderBookStatement.executeUpdate();
     }
 
-    public void confirmOrder(String ISBN) throws SQLException {
-     confirmOrderStatement.setString(1,ISBN);
+    public void confirmOrder(Integer orders_id) throws SQLException {
+     confirmOrderStatement.setInt(1,orders_id);
      confirmOrderStatement.executeUpdate();
     }
 
@@ -91,6 +120,7 @@ public class ManagerRepo extends UserRepo{
         addBookStatement.setInt(8,(Integer) map.get(SearchContract.CATEGORY_ID));
         addBookStatement.executeUpdate();
     }
+
     public ResultSet getOrders() throws SQLException {
         String query = "select * from orders";
         PreparedStatement st = con.prepareStatement(query);
@@ -119,19 +149,25 @@ public class ManagerRepo extends UserRepo{
     }
 
     public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> whereAttribute) throws SQLException {
+//        String query = "update book set title = ? where isbn = ?";
+//        modifyBookStatement = con.prepareStatement(query) ;
+//        modifyBookStatement.setObject(1,setAttribute.get("title"));
+//        modifyBookStatement.setObject(2,whereAttribute.get("isbn"));
+//        modifyBookStatement.executeUpdate();
 
-        String query = " update into book set " ;
+
+        String query = "update book set ";
         int sizeSet = setAttribute.size();
         int i = 0;
         for(String column : setAttribute.keySet()){
-            query += column + "= ? ";
+            query += (column + " =? ");
             if(i != sizeSet-1) query += ", ";
             i++;
         }
 
         if(whereAttribute == null){
             modifyBookStatement = con.prepareStatement(query) ;
-            modifyBookStatement.executeUpdate(query);
+            modifyBookStatement.executeUpdate();
             return;
         }
 
@@ -139,20 +175,27 @@ public class ManagerRepo extends UserRepo{
         query += "where " ;
         i = 0;
         for(String column : whereAttribute.keySet()){
-            query += column + "= ? ";
+            query += column + " =? ";
             if(i != sizeWhere-1) query += "and ";
             i++;
         }
+
+        System.out.println(query);
+
         i = 1;
+
         modifyBookStatement = con.prepareStatement(query) ;
         for(Object value : setAttribute.values()){
-            modifyBookStatement.setObject(i++,value);
-        }
-        for(Object value : whereAttribute.values()){
+            System.out.println(value);
             modifyBookStatement.setObject(i++,value);
         }
 
-        modifyBookStatement.executeUpdate(query);
+        for(Object value : whereAttribute.values()){
+            System.out.println(value);
+            modifyBookStatement.setObject(i++,value);
+        }
+
+        modifyBookStatement.executeUpdate();
     }
 
     public void removeBooks (Map<String,Object> searchAttribute) throws SQLException {
@@ -188,5 +231,12 @@ public class ManagerRepo extends UserRepo{
     }
     public ResultSet getTop5CustomersLastThreeMonths() throws SQLException{
         return getTopCustomers.executeQuery();
+    }
+
+
+    public ResultSet getAllCreditCards() throws SQLException {
+        String query = "select * from credit_card";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
     }
 }

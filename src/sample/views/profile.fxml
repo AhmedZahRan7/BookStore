@@ -11,20 +11,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane fx:controller="sample.controllers.profileController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.profileController">
    <children>
       <Circle fill="#f05b5b" layoutX="645.0" layoutY="74.0" radius="46.0" stroke="BLACK" strokeType="INSIDE" />
       <Group layoutX="485.0" layoutY="84.0">
          <children>
             <Button fx:id="confirmButton" layoutX="97.0" layoutY="326.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="126.0" text="Confirm Edits" />
-            <TextField fx:id="firstNameField"  layoutY="75.0" prefHeight="25.0" prefWidth="138.0" />
+            <TextField fx:id="firstNameField" layoutY="75.0" prefHeight="25.0" prefWidth="138.0" />
             <Label layoutY="58.0" text="First name" />
             <TextField fx:id="userNameField" layoutY="125.0" prefHeight="25.0" prefWidth="319.0" />
             <Label layoutY="108.0" text="Username" />
-            <TextField fx:id="mailField"  layoutY="178.0" prefHeight="25.0" prefWidth="319.0" />
+            <TextField fx:id="mailField" layoutY="178.0" prefHeight="25.0" prefWidth="319.0" />
             <Label layoutY="161.0" text="E-mail" />
-            <TextField fx:id="addressField"  layoutY="226.0" prefHeight="25.0" prefWidth="319.0" />
+            <TextField fx:id="addressField" layoutY="226.0" prefHeight="25.0" prefWidth="319.0" />
             <Label layoutY="209.0" text="Shipping Address" />
             <TextField fx:id="lastNameField" layoutX="181.0" layoutY="75.0" prefHeight="25.0" prefWidth="138.0" />
             <Label layoutX="182.0" layoutY="58.0" text="Last name" />
@@ -32,12 +31,12 @@
             <PasswordField fx:id="passwordField" layoutY="276.0" prefHeight="25.0" prefWidth="319.0" />
          </children>
       </Group>
-      <TableView fx:id="checkOutsHistoryTable" layoutY="60.0" prefHeight="439.0" prefWidth="348.0" />
-      <Text layoutX="71.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Checkouts History">
+      <TableView fx:id="checkOutsHistoryTable" layoutY="60.0" prefHeight="439.0" prefWidth="409.0" />
+      <Text layoutX="100.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Checkouts History">
          <font>
             <Font name="Agency FB" size="36.0" />
          </font>
       </Text>
-      <Button fx:id="backButton"  layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="backButton" layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
    </children>
 </AnchorPane>
