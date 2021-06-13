@@ -148,56 +148,66 @@ public class ManagerRepo extends UserRepo{
         deleteCatagoryStatement.executeUpdate();
     }
 
-    public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> whereAttribute) throws SQLException {
-//        String query = "update book set title = ? where isbn = ?";
-//        modifyBookStatement = con.prepareStatement(query) ;
-//        modifyBookStatement.setObject(1,setAttribute.get("title"));
-//        modifyBookStatement.setObject(2,whereAttribute.get("isbn"));
-//        modifyBookStatement.executeUpdate();
-
-
-        String query = "update book set ";
-        int sizeSet = setAttribute.size();
-        int i = 0;
-        for(String column : setAttribute.keySet()){
-            query += (column + " =? ");
-            if(i != sizeSet-1) query += ", ";
-            i++;
-        }
-
-        if(whereAttribute == null){
-            modifyBookStatement = con.prepareStatement(query) ;
-            modifyBookStatement.executeUpdate();
-            return;
-        }
-
-        int sizeWhere = whereAttribute.size();
-        query += "where " ;
-        i = 0;
-        for(String column : whereAttribute.keySet()){
-            query += column + " =? ";
-            if(i != sizeWhere-1) query += "and ";
-            i++;
-        }
-
-        System.out.println(query);
-
-        i = 1;
-
-        modifyBookStatement = con.prepareStatement(query) ;
-        for(Object value : setAttribute.values()){
-            System.out.println(value);
-            modifyBookStatement.setObject(i++,value);
-        }
-
-        for(Object value : whereAttribute.values()){
-            System.out.println(value);
-            modifyBookStatement.setObject(i++,value);
-        }
-
-        modifyBookStatement.executeUpdate();
+public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> whereAttribute) throws SQLException {
+    String query = "update book set ";
+    int sizeSet = setAttribute.size();
+    int i = 0;
+    for(String column : setAttribute.keySet()){
+        query += (column + " =? ");
+        if(i != sizeSet-1) query += ", ";
+        i++;
     }
-
+    if(whereAttribute == null){
+        modifyBookStatement = con.prepareStatement(query) ;
+        modifyBookStatement.executeUpdate();
+        return;
+    }
+    int sizeWhere = whereAttribute.size();
+    query += "where " ;
+    i = 0;
+    for(String column : whereAttribute.keySet()){
+        query += column + " =? ";
+        if(i != sizeWhere-1) query += "and ";
+        i++;
+    }
+    System.out.println(query);
+    i = 1;
+    modifyBookStatement = con.prepareStatement(query) ;
+    for(Map.Entry<String,Object> entry : setAttribute.entrySet()){
+        if(entry.getKey().equals(SearchContract.CATEGORY_ID)){
+            Object id = getCatagroy((String) entry.getValue());
+            modifyBookStatement.setObject(i++,id);
+        }else if(entry.getKey().equals(SearchContract.PUBLISHER_ID)){
+            Object id = getPublisherWithName((String) entry.getValue());
+            modifyBookStatement.setObject(i++,id);
+        }else{
+            modifyBookStatement.setObject(i++,entry.getValue());
+        }
+    }
+    for(Object value : whereAttribute.values()){
+        System.out.println(value);
+        modifyBookStatement.setObject(i++,value);
+    }
+    modifyBookStatement.executeUpdate();
+}
+private Object getPublisherWithName(String value) throws SQLException {
+    String query = "select publisher_id from publisher where publisher_name =?";
+    PreparedStatement st = con.prepareStatement(query);
+    st.setString(1,value);
+    ResultSet set = st.executeQuery();
+    if(set.next())
+        return set.getObject(1);
+    return null;
+}
+private Object getCatagroy(String value) throws SQLException {
+    String query = "select catagory_id from catagory where catagory_name =?";
+    PreparedStatement st = con.prepareStatement(query);
+    st.setString(1,value);
+    ResultSet set = st.executeQuery();
+    if(set.next())
+      return set.getObject(1);
+    return null;
+}
     public void removeBooks (Map<String,Object> searchAttribute) throws SQLException {
         String query = " delete from book ";
 

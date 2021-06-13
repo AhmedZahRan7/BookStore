@@ -158,6 +158,7 @@ public class UserInterfaceController {
                         map.put(SearchContract.ISBN,searchFor);
                         map.put(SearchContract.TITLE,searchFor);
                         map.put(SearchContract.PUBLISHER_NAME,searchFor);
+                        map.put(SearchContract.CATEGORY,searchFor);
                         if (searchFor.isEmpty()) map = null;
                         try {
                             UserViewModel.get_instance().getBooks(map, new IUserCallBack() {

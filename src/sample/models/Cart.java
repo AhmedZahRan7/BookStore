@@ -74,8 +74,12 @@ public class Cart {
 
     public void removeBook(String ISBN) {
         Book book = this.getSelectedBook(ISBN);
-        if(this.selectedBooks.get(book) == 1)
+        if(this.selectedBooks.get(book) == 1) {
             this.selectedBooks.remove(book);
+            this.totalPrice -= book.getPrice();
+            return;
+        }
+        this.totalPrice -= book.getPrice();
         this.selectedBooks.put(book, this.selectedBooks.get(book)-1);
     }
 
