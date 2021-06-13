@@ -11,7 +11,8 @@ public class Book {
     private Publisher publisher;
     private String publication_year;
 
-    public Book(String ISBN, String title, Integer noCopies, Integer threshold, Catagory category, Publisher publisher, String publicationYear, float price) {
+    public Book(String ISBN, String title, Integer noCopies, Integer threshold,
+                Catagory category, Publisher publisher, String publicationYear, float price) {
         this.ISBN = ISBN;
         this.title = title;
         this.noCopies = noCopies;

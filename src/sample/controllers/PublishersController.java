@@ -38,10 +38,10 @@ public class PublishersController {
         initializeButtonsFunctions();
     }
     private void initializeTable(){
-        TableColumn<Publisher,String> id = new TableColumn<>();
-        TableColumn<Publisher,String> name = new TableColumn<>();
-        TableColumn<Publisher,String> address = new TableColumn<>();
-        TableColumn<Publisher,String> phone = new TableColumn<>();
+        TableColumn<Publisher,String> id = new TableColumn<>("ID");
+        TableColumn<Publisher,String> name = new TableColumn<>("Name");
+        TableColumn<Publisher,String> address = new TableColumn<>("Address");
+        TableColumn<Publisher,String> phone = new TableColumn<>("Phone");
         id.setMinWidth(100);
         name.setMinWidth(100);
         address.setMinWidth(100);
@@ -49,8 +49,8 @@ public class PublishersController {
         id.setCellValueFactory(new PropertyValueFactory<Publisher,String>("publisher_id"));
         name.setCellValueFactory(new PropertyValueFactory<Publisher,String>("publisher_name"));
         address.setCellValueFactory(new PropertyValueFactory<Publisher,String>("Address"));
-        publishersTable.getColumns().addAll(id,name,address);
-//        phone.setCellValueFactory(new PropertyValueFactory<Publisher,String>("publisher_id"));
+        phone.setCellValueFactory(new PropertyValueFactory<Publisher,String>("phoneNumber"));
+        publishersTable.getColumns().addAll(id,name,address,phone);
     }
     void setTableData(){
         data.clear();
@@ -118,6 +118,7 @@ public class PublishersController {
                     ManagerViewModel.get_instance().addPublisher(
                             publisherAddressField.getText().trim(),
                             publisherNameField.getText().trim(),
+                            publisherPhoneField.getText().trim(),
                             new IUserCallBack() {
                                 @Override
                                 public void onSuccess(User user) {

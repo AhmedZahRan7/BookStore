@@ -83,18 +83,8 @@ public class CheckoutController {
                     UserViewModel.get_instance().addToCart(addField.getText().trim(),1);
                     addField.setText("");
                     setDataInTable();
-                } catch (SQLException throwables) {
+                } catch (Exception throwables) {
                     throwables.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
             }
         });

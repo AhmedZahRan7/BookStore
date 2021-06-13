@@ -4,10 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.Repository.SearchContract;
@@ -28,12 +25,15 @@ public class UserInterfaceController {
     @FXML Button adminButton;
     @FXML Button searchButton;
     @FXML TextField searchTextField;
+    @FXML Label userNameLabel;
     @FXML TableView tableView;
     final ObservableList<Book> books = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         tableView.setItems(books);
+        userNameLabel.setText("Welcome,\n"+CurrentUser.getUser().getFirst_name()+" "+CurrentUser.getUser().getFirst_name());
         initializeButtonsFunctions();
         initializeBooksTable();
+
         try {
             setDataInTableFromDataBase();
         } catch (SQLException throwables) {
@@ -117,7 +117,7 @@ public class UserInterfaceController {
         }).start();
     }
     void initializeButtonsFunctions(){
-//        if(CurrentUser.getUser().isManager() == 0) adminButton.setVisible(false);
+        if(CurrentUser.getUser().isManager() == 0) adminButton.setVisible(false);
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -144,6 +144,7 @@ public class UserInterfaceController {
             @Override
             public void handle(ActionEvent actionEvent) {
                 System.out.println("logout");
+                CurrentUser.setUser(null);
                 ViewsSwitcher.getInstance().switchTo((Stage) logoutButton.getScene().getWindow(),"login");
             }
         });

@@ -1,23 +1,21 @@
 package sample.controllers;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.Repository.SearchContract;
 import sample.callBacks.IUserCallBack;
 import sample.models.Book;
 import sample.models.User;
 import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class LoginController {
     @FXML TextField userNameLogInField;
@@ -74,20 +72,9 @@ public class LoginController {
 
                         }
                     });
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
         signupButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -113,10 +100,78 @@ public class LoginController {
                 ){
                     ViewsSwitcher.showAlert("Error in values");
                 }
-//                UserViewModel.get_instance().addUser(new User(user,pass,"",address,last,first,email));
-                ViewsSwitcher.getInstance().switchTo((Stage) signupButton.getScene().getWindow(),"user_interface");
+                try {
+                    HashMap<String,Object> userInformation = new HashMap<>();
+                    userInformation.put(SearchContract.USER_NAME,user);
+                    userInformation.put(SearchContract.FIRST_NAME,first);
+                    userInformation.put(SearchContract.LAST_NAME,last);
+                    userInformation.put(SearchContract.EMAIL,email);
+                    userInformation.put(SearchContract.SHIPPING_ADDRESS,address);
+                    userInformation.put(SearchContract.PASSWORD,pass);
+                    UserViewModel.get_instance().addUser(userInformation, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
-                System.out.println("Signup :");
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException, ClassNotFoundException {
+                            try {
+                                UserViewModel.get_instance().getUser(user, pass, new IUserCallBack() {
+                                    @Override
+                                    public void onSuccess(User user) {
+                                        if(user == null) {
+                                            ViewsSwitcher.showAlert("User not found");
+                                        }
+                                        else {
+                                            CurrentUser.setUser(user);
+                                            ViewsSwitcher.getInstance().switchTo((Stage) signupButton.getScene().getWindow(),"user_interface");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Book book) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(List<Object> data) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess() throws SQLException {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure() {
+
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

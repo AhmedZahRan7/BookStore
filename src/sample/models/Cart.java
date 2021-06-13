@@ -1,5 +1,6 @@
 package sample.models;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,9 +8,9 @@ import java.util.Set;
 
 public class Cart {
     private Map<Book, Integer> selectedBooks;
-    private Float totalPrice;
+    private double totalPrice;
     private final Integer INITIAL_CAPACITY = 100;
-
+    private static DecimalFormat df = new DecimalFormat("0.00");
     public Cart() {
         this.selectedBooks = new HashMap(this.INITIAL_CAPACITY);
         this.totalPrice = 0.0F;
@@ -83,7 +84,8 @@ public class Cart {
         this.selectedBooks.put(book, this.selectedBooks.get(book)-1);
     }
 
-    public float getTotalPurchase(){
+    public double getTotalPurchase(){
+        this.totalPrice = Math.round(this.totalPrice * 100.0) / 100.0;
         return totalPrice;
     }
 }
