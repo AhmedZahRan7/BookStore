@@ -24,9 +24,15 @@ public class UserViewModel {
     }
 
     public static UserViewModel get_instance() throws SQLException, ClassNotFoundException {
-            if(model == null)
-                return new UserViewModel();
-            else return model;
+        if(model == null) {
+            model = new UserViewModel();
+        }
+        return model;
+    }
+
+    public synchronized void addUser(Map<String,Object> map,IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+        repo.addUser(map);
+        callBack.onSuccess();
     }
 
     public synchronized void getUser(String userName, String password, IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -37,8 +43,6 @@ public class UserViewModel {
         }
         callBack.onSuccess(user);
     }
-
-
 
     public synchronized void getBook(String ISBN ,IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ResultSet rs = repo.getBookWithIsbn(ISBN);
@@ -75,8 +79,9 @@ public class UserViewModel {
                 book = resultSetParser.retrieveBook(rs);
                 if (book.getNoCopies() < NOCopies)
                     throw new IndexOutOfBoundsException();
-                else
+                else{
                     userCartBooks.addBook(book, NOCopies);
+                }
             }else throw new SQLException();
         }
         return userCartBooks;
@@ -86,27 +91,56 @@ public class UserViewModel {
         return userCartBooks;
     }
 
-    public void removeCart() throws SQLException {
-        userCartBooks = null;
+    public void removeCart(){
+        userCartBooks = new Cart();
     }
 
+    public void removeFromCart(String isbn) {
+        userCartBooks.removeBook(isbn);
+    }
 
-    public synchronized void addCreditCard(String cardNo,String expireDate,String userName,IUserCallBack userCallBack) throws  SQLException{
+    public synchronized void addCreditCard(String cardNo,String expireDate,String userName,IUserCallBack userCallBack) throws SQLException, ClassNotFoundException {
         repo.addCreditCard(cardNo,expireDate,userName);
         userCallBack.onSuccess();
     }
-    public synchronized void removeCreditCard(String cardID,IUserCallBack userCallBack) throws SQLException {
+    public synchronized void removeCreditCard(String cardID,IUserCallBack userCallBack) throws SQLException, ClassNotFoundException {
       repo.removeCreditCard(cardID);
       userCallBack.onSuccess();
     }
 
-    public synchronized void writeCart(Cart cart, String userName, IUserCallBack callBack) throws SQLException {
+    public synchronized void writeCart(Cart cart, String userName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
       repo.writeCart(cart.getSelectedBooks(),userName);
       callBack.onSuccess();
     }
 
-    public synchronized void updateUser(String userName, User newUser, IUserCallBack callBack) throws SQLException {
-//        callBack.onSuccess();
+    public synchronized void updateUser(String userName, User newUser, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+      repo.updateUser(userName,newUser);
+      callBack.onSuccess();
+    }
+
+    public synchronized void removeUser(String userName,IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+        repo.removeUser(userName);
+        callBack.onSuccess();
+    }
+
+    public synchronized void getCheckouts(String userName,IUserCallBack callBack) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        ResultSet set = repo.getCheckouts(userName);
+        List<Object> list = new ArrayList<>();
+        while(set.next()){
+            Checkout checkout = resultSetParser.retrieveCheckout(set);
+            list.add(checkout);
+        }
+        callBack.onSuccess(list);
+    }
+
+    public synchronized void getAllBooks(IUserCallBack callBack) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        ResultSet rs = repo.getAllBooks();
+        List<Object> list = new ArrayList<>();
+        while (rs.next()){
+            Book book = resultSetParser.retrieveBook(rs);
+            list.add(book);
+        }
+        callBack.onSuccess(list);
     }
 
 }

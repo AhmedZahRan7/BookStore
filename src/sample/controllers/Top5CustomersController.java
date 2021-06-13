@@ -25,10 +25,11 @@ public class Top5CustomersController {
     @FXML TableView customersTable;
     @FXML
     Button backButton;
-
+    ObservableList<User> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeTable();
-//        setTableData(getTopCustomers());
+        customersTable.setItems(data);
+        getTopCustomers();
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -47,40 +48,43 @@ public class Top5CustomersController {
         customersTable.getColumns().addAll(user,amount);
     }
 
-    void setTableData(List<User> purchases){
-        ObservableList<User> data = FXCollections.observableArrayList(purchases);
-        customersTable.setItems(data);
-    }
     void getTopCustomers(){
-        try{
-            ManagerViewModel.get_instance().getTop5CustomersLastThreeMonths(new IUserCallBack() {
-                @Override
-                public void onSuccess(User user) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    ManagerViewModel.get_instance().getTop5CustomersLastThreeMonths(new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> customers) {
+                            for (Object customer : customers) {
+                                data.add((User) customer);
+                            }
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
                 }
-
-                @Override
-                public void onSuccess(Book book) {
-
+                catch (Exception e){
                 }
-
-                @Override
-                public void onSuccess(List<Object> data) {
-
-                }
-
-                @Override
-                public void onSuccess() throws SQLException {
-
-                }
-
-                @Override
-                public void onFailure() {
-
-                }
-            });
-        }
-        catch (Exception e){
-        }
+            }
+        }).start();
     }
 }

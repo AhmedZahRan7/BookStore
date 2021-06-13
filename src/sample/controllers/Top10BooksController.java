@@ -28,12 +28,10 @@ public class Top10BooksController {
     @FXML TableView topBooks;
     @FXML
     Button backButton;
-    ObservableList<Book> data;
+    ObservableList<Book> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeTable();
-        data = FXCollections.observableArrayList(new ArrayList<>());
         topBooks.setItems(data);
-
         setTableData();
         backButton.setStyle("-fx-background-color: #FFCA33; ");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -71,8 +69,8 @@ public class Top10BooksController {
                         }
 
                         @Override
-                        public void onSuccess(List<Object> data) {
-
+                        public void onSuccess(List<Object> books) {
+                            for( Object b: books) data.add((Book)b);
                         }
 
                         @Override

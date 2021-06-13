@@ -8,15 +8,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import sample.models.Order;
+import sample.Repository.SearchContract;
+import sample.callBacks.IUserCallBack;
+import sample.models.*;
+import sample.viewmodels.ManagerViewModel;
 import sample.views.ViewsSwitcher;
-
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.*;
 
 public class AdminPanelController {
     @FXML TextField ISBNAddField;
     @FXML TextField titleAddField;
-    @FXML TextField authorAddField;
+    @FXML TextField noCopiesField;
     @FXML TextField publisherAddField;
     @FXML TextField publicationAddField;
     @FXML TextField priceAddField;
@@ -27,6 +31,7 @@ public class AdminPanelController {
     @FXML TextField noCopiesOrderField;
     @FXML TextField orderIdConfirmField;
     @FXML TextField userNameToPromoteField;
+    @FXML TextField thresholdField;
     @FXML Button addBookButton;
     @FXML Button editBookButton;
     @FXML Button orderButton;
@@ -36,13 +41,16 @@ public class AdminPanelController {
     @FXML Button top5CustomersButton;
     @FXML Button top10BooksButton;
     @FXML Button backButton;
+    @FXML Button viewPublisherButton;
     @FXML ChoiceBox<String> fieldToEditField;
     @FXML TableView ordersTable;
+    final ObservableList<Order> data = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
         initializeButtonsFunctions();
         initializeFieldToEditFieldChoice();
         initializeOrdersTable();
-        setDataInTable(getCurrentOrders());
+        ordersTable.setItems(data);
+        setDataInTable();
     }
     void initializeButtonsFunctions(){
         backButton.setStyle("-fx-background-color: #FFCA33; ");
@@ -57,13 +65,62 @@ public class AdminPanelController {
             public void handle(ActionEvent actionEvent) {
                 String isbn = ISBNAddField.getText().trim();
                 String title = titleAddField.getText().trim();
-                String author = authorAddField.getText().trim();
+                String copies = noCopiesField.getText().trim();
                 String publisher = publisherAddField.getText().trim();
                 String publicationTear = publicationAddField.getText().trim();
                 String price = priceAddField.getText().trim();
                 String cat = categoryAddField.getText().trim();
+                String threshold = thresholdField.getText().trim();
+                try {
+                    HashMap<String,Object> map = new HashMap<>();
+                    map.put(SearchContract.ISBN,isbn);
+                    map.put(SearchContract.TITLE,title);
+                    map.put(SearchContract.PUBLISHER_ID,Integer.parseInt(publisher));
+                    map.put(SearchContract.PUBLICATION_YEAR,publicationTear);
+                    map.put(SearchContract.PRICE,Float.parseFloat(price));
+                    map.put(SearchContract.CATEGORY_ID,Integer.parseInt(cat));
+                    map.put(SearchContract.NOCOPIES, Integer.parseInt(copies));
+                    map.put(SearchContract.THRESHOLD, Integer.parseInt(threshold));
+                    ManagerViewModel.get_instance().addBook(map,
+                            new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
-                System.out.println("add :"+isbn+title+author+publisher+publicationTear+price+cat);
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+                            ViewsSwitcher.showSuccess("Added");
+                            ISBNAddField.setText("");
+                            titleAddField.setText("");
+                            noCopiesField.setText("");
+                            publisherAddField.setText("");
+                            publicationAddField.setText("");
+                            priceAddField.setText("");
+                            categoryAddField.setText("");
+                            thresholdField.setText("");
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         editBookButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -72,14 +129,82 @@ public class AdminPanelController {
                 String isbn = ISBNEditField.getText().trim();
                 String field = fieldToEditField.getValue();
                 String newVal = newValueField.getText().trim();
-                System.out.println("edit :"+isbn+field+newVal);
+                try {
+                    HashMap<String,Object> mapEdit = new HashMap<>();
+                    HashMap<String,Object> mapWhere = new HashMap<>();
+                    mapEdit.put(fieldToEditField.getValue(),newValueField.getText());
+                    mapWhere.put(SearchContract.ISBN,ISBNEditField.getText());
+                    ManagerViewModel.get_instance().modifyBook(mapEdit, mapWhere, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+                            ViewsSwitcher.showSuccess("Modified");
+                            ISBNEditField.setText("");
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         promoteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 String userName = userNameToPromoteField.getText().trim();
-                System.out.println("Promote :"+userName);
+                try {
+                    ManagerViewModel.get_instance().promoteUser(userName, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+                            ViewsSwitcher.showSuccess("Promoted");
+                            userNameToPromoteField.setText("");
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         orderButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -87,14 +212,81 @@ public class AdminPanelController {
             public void handle(ActionEvent actionEvent) {
                 String isbn = ISBNOrderField.getText().trim();
                 int copies = Integer.parseInt(noCopiesOrderField.getText().trim());
-                System.out.println("order :"+isbn+copies);
+                try {
+                    ManagerViewModel.get_instance().orderBook(isbn, copies, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+                            ViewsSwitcher.showSuccess("Order Added");
+                            noCopiesOrderField.setText("");
+                            ISBNOrderField.setText("");
+                            setDataInTable();
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 String id = orderIdConfirmField.getText().trim();
-                System.out.println("confirm :"+id);
+                try {
+                    ManagerViewModel.get_instance().confirmOrder(Integer.parseInt(id), new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+                            ViewsSwitcher.showSuccess("Order Confirmed");
+                            orderIdConfirmField.setText("");
+                            setDataInTable();
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         totalSalesButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -118,16 +310,60 @@ public class AdminPanelController {
                 ViewsSwitcher.getInstance().switchTo((Stage) top10BooksButton.getScene().getWindow(),"top_10_books");
             }
         });
+        viewPublisherButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ViewsSwitcher.getInstance().switchTo((Stage) viewPublisherButton.getScene().getWindow(),"publishers");
+            }
+        });
     }
-    void setDataInTable(ArrayList<Order> orders){
-        final ObservableList<Order> data = FXCollections.observableArrayList(orders);
-        ordersTable.setItems(data);
-    }
-    ArrayList<Order> getCurrentOrders(){
-        //get data of books in the cart
-        ArrayList<Order> books = new ArrayList<>();
+    void setDataInTable(){
+        data.clear();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ManagerViewModel.get_instance().getOrders(new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
 
-        return books;
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> orders) {
+                            for (Object o : orders) data.add((Order) o);
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
     void initializeOrdersTable(){
         TableColumn<Order,String> isbn = new TableColumn<Order, String>("ISBN");
@@ -137,20 +373,20 @@ public class AdminPanelController {
         noCopies.setMinWidth(30);
         orderId.setMinWidth(30);
         isbn.setCellValueFactory(new PropertyValueFactory<Order,String>("ISBN"));
-        noCopies.setCellValueFactory(new PropertyValueFactory<Order,String>("noOfCopies"));
-        orderId.setCellValueFactory(new PropertyValueFactory<Order,String>("orderID"));
+        noCopies.setCellValueFactory(new PropertyValueFactory<Order,String>(SearchContract.NOCOPIES));
+        orderId.setCellValueFactory(new PropertyValueFactory<Order,String>("orders_id"));
         ordersTable.getColumns().addAll(orderId,isbn,noCopies);
     }
     void initializeFieldToEditFieldChoice(){
         fieldToEditField.getItems().addAll(
-                "ISBN",
-                "price",
-                "title",
-                "noCopies",
-                "threshold",
-                "category",
-                "publisherID",
-                "publicationYear"
+                SearchContract.ISBN,
+                SearchContract.PRICE,
+                SearchContract.TITLE,
+                SearchContract.NOCOPIES,
+                SearchContract.THRESHOLD,
+                SearchContract.CATEGORY,
+                SearchContract.PUBLISHER_ID,
+                SearchContract.PUBLICATION_YEAR
                 );
     }
 }

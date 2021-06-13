@@ -7,36 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Publisher {
-    private int publisher_id;
+    private Integer publisher_id;
     private String Address;
     private String publisher_name;
-    private List<String> phoneNumber;
-    private final StringProperty publisherNameProb  = new SimpleStringProperty();
-    public Publisher(int id, String address, String name) {
+    private String phoneNumber;
+
+    public Publisher(int id, String address, String name,String phoneNumber) {
         this.publisher_id = id;
         this.Address = address;
         this.publisher_name = name;
-        this.phoneNumber = new ArrayList<>();
-    }
-
-    public StringProperty getPublisherNameProb() {
-        setPublisherNameProb(this.publisher_name);
-        return publisherNameProb;
-    }
-
-    public void setPublisherNameProb(String name) {
-        this.publisherNameProb.setValue(name);
-    }
-
-    public Publisher(int id, String address, String name, List<String> phoneNumber) {
-        this(id, address, name);
         this.phoneNumber = phoneNumber;
     }
 
     public Publisher() {
 
     }
-
+    public StringProperty getPublisherNameProb(){
+            return new SimpleStringProperty(this.publisher_name);
+    }
     public int getPublisher_id() {
         return publisher_id;
     }
@@ -61,11 +49,11 @@ public class Publisher {
         this.publisher_name = publisher_name;
     }
 
-    public List<String> getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(List<String> phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

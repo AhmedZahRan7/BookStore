@@ -11,6 +11,6 @@ public interface IUserCallBack {
     void onSuccess(User user);
     void onSuccess(Book book);
     void onSuccess(List<Object> data);
-    void onSuccess() throws SQLException;
+    void onSuccess() throws SQLException, ClassNotFoundException;
     void onFailure();
 }

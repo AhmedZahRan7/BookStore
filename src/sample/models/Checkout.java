@@ -1,60 +1,64 @@
 package sample.models;
 
-import java.util.Date;
+
 
 public class Checkout {
 
-    private long ID;
-    private Book book;
-    private User user;
-    private Date date;
-    private int noOfCopies;
+    private Integer Checkout_id;
+    private String ISBN;
+    private String user_name;
+    private String date;
+    private Integer nocopies;
 
-    public Checkout(long ID, Book book, User user, Date date, int noOfCopies) {
-        this.ID = ID;
-        this.book = book;
-        this.user = user;
+    public Checkout(int checkout_id, String ISBN, String user_name, String date, int noCopies) {
+        this.Checkout_id = checkout_id;
+        this.ISBN = ISBN;
+        this.user_name = user_name;
         this.date = date;
-        this.noOfCopies = noOfCopies;
+        this.nocopies = noCopies;
     }
 
-    public long getID() {
-        return ID;
+    public Checkout() {
+
     }
 
-    public void setID(long ID) {
-        this.ID = ID;
+    public int getCheckout_id() {
+        return Checkout_id;
     }
 
-    public Book getBook() {
-        return book;
+    public void setCheckout_id(int checkout_id) {
+        this.Checkout_id = checkout_id;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public String getISBN() {
+        return ISBN;
     }
 
-    public User getUser() {
-        return user;
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public Date getDate() {
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public int getNoOfCopies() {
-        return noOfCopies;
+    public int getNocopies() {
+        return nocopies;
     }
 
-    public void setNoOfCopies(int noOfCopies) {
-        this.noOfCopies = noOfCopies;
+    public void setNocopies(int nocopies) {
+        this.nocopies = nocopies;
     }
 }

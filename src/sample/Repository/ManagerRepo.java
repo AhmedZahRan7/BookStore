@@ -1,7 +1,10 @@
 package sample.Repository;
 
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
+import sample.models.User;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,12 +26,14 @@ public class ManagerRepo extends UserRepo{
     private PreparedStatement getBookSales;
     private PreparedStatement getTopCustomers;
     private PreparedStatement getTotalLastMonthsSales;
-
+    private PreparedStatement getPublisherStatement;
+    private PreparedStatement addUserStatement;
     public ManagerRepo() throws SQLException, ClassNotFoundException {
         super();
+        getPublisherStatement = con.prepareStatement("select from publisher where publisher_id = ?");
         promoteUserStatement = con.prepareStatement("update user set manager=1 where user_name = ?");
         orderBookStatement = con.prepareStatement("insert into orders (isbn,nocopies) values (?,?)");
-        confirmOrderStatement = con.prepareStatement("delete from orders where isbn = ?");
+        confirmOrderStatement = con.prepareStatement("delete from orders where orders_id = ?");
         addBookStatement = con.prepareStatement("insert into book " +
                 " (isbn,title,price,publication_year,nocopies,threshold,publisher_id,catagory_id) values (?,?,?,?,?,?,?,?)");
         addPublisherStatement = con.prepareStatement("insert into publisher (address,publisher_name) values (?,?) ");
@@ -55,6 +60,7 @@ public class ManagerRepo extends UserRepo{
                 "AND c.Date >= DATE_ADD(NOW(),INTERVAL -30 DAY)\n" +
                 "group by b.ISBN \n" +
                 "order by Total_Sales desc");
+
     }
 
 
@@ -63,35 +69,62 @@ public class ManagerRepo extends UserRepo{
         promoteUserStatement.executeUpdate();
     }
 
+
+
+
+    public synchronized ResultSet getAllUsers() throws SQLException {
+        String query = "select * from user";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+
+
+    public synchronized ResultSet getAllPublishers() throws SQLException {
+        String query = "select * from publisher";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+    public synchronized ResultSet getAllCheckout() throws SQLException {
+        String query = "select * from checkout";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
+    public ResultSet getPublisher (Integer publisher_id ) throws SQLException {
+        getPublisherStatement.setInt(1,publisher_id);
+        return  getPublisherStatement.executeQuery();
+    }
+
+
     public void orderBook(String ISBN, int NOCopies) throws SQLException {
      orderBookStatement.setString(1,ISBN);
      orderBookStatement.setInt(2,NOCopies);
      orderBookStatement.executeUpdate();
     }
 
-    public void confirmOrder(String ISBN) throws SQLException {
-     confirmOrderStatement.setString(1,ISBN);
+    public void confirmOrder(Integer orders_id) throws SQLException {
+     confirmOrderStatement.setInt(1,orders_id);
      confirmOrderStatement.executeUpdate();
     }
 
-    public void addBooks(List<Book> books) throws SQLException {
-        int i=0;
-      for(Book book : books){
-          addBookStatement.setString(1,book.getISBN());
-          addBookStatement.setString(2,book.getTitle());
-          addBookStatement.setFloat(3,book.getPrice());
-          addBookStatement.setDate(4,book.getPublication_year());
-          addBookStatement.setInt(5,book.getNoCopies());
-          addBookStatement.setInt(6,book.getThreshold());
-          addBookStatement.setInt(7,book.getPublisher().getPublisher_id());
-         // addBookStatement.setInt(8,book.getCategory());
+    public void addBook(Map<String,Object> map) throws SQLException {
+        addBookStatement.setString(1, (String) map.get(SearchContract.ISBN));
+        addBookStatement.setString(2,(String) map.get(SearchContract.TITLE));
+        addBookStatement.setFloat(3,(Float) map.get(SearchContract.PRICE));
+        addBookStatement.setString(4,(String) map.get(SearchContract.PUBLICATION_YEAR));
+        addBookStatement.setInt(5,(Integer) map.get(SearchContract.NOCOPIES));
+        addBookStatement.setInt(6,(Integer) map.get(SearchContract.THRESHOLD));
+        addBookStatement.setInt(7,(Integer) map.get(SearchContract.PUBLISHER_ID));
+        addBookStatement.setInt(8,(Integer) map.get(SearchContract.CATEGORY_ID));
+        addBookStatement.executeUpdate();
+    }
 
-          addBookStatement.addBatch();
-          i++;
-          if (i % 20 == 0 || i == books.size()) {
-              addBookStatement.executeBatch(); // Execute every 20 items.
-          }
-      }
+    public ResultSet getOrders() throws SQLException {
+        String query = "select * from orders";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
     }
 
     public void addPublisher(String address, String publisherName) throws SQLException {
@@ -115,43 +148,66 @@ public class ManagerRepo extends UserRepo{
         deleteCatagoryStatement.executeUpdate();
     }
 
-    public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> whereAttribute) throws SQLException {
-
-        String query = " update into book set " ;
-        int sizeSet = setAttribute.size();
-        int i = 0;
-        for(String column : setAttribute.keySet()){
-            query += column + "= ? ";
-            if(i != sizeSet-1) query += ", ";
-            i++;
-        }
-
-        if(whereAttribute == null){
-            modifyBookStatement = con.prepareStatement(query) ;
-            modifyBookStatement.executeUpdate(query);
-            return;
-        }
-
-        int sizeWhere = whereAttribute.size();
-        query += "where " ;
-        i = 0;
-        for(String column : whereAttribute.keySet()){
-            query += column + "= ? ";
-            if(i != sizeWhere-1) query += "and ";
-            i++;
-        }
-        i = 1;
-        modifyBookStatement = con.prepareStatement(query) ;
-        for(Object value : setAttribute.values()){
-            modifyBookStatement.setObject(i++,value);
-        }
-        for(Object value : whereAttribute.values()){
-            modifyBookStatement.setObject(i++,value);
-        }
-
-        modifyBookStatement.executeUpdate(query);
+public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> whereAttribute) throws SQLException {
+    String query = "update book set ";
+    int sizeSet = setAttribute.size();
+    int i = 0;
+    for(String column : setAttribute.keySet()){
+        query += (column + " =? ");
+        if(i != sizeSet-1) query += ", ";
+        i++;
     }
-
+    if(whereAttribute == null){
+        modifyBookStatement = con.prepareStatement(query) ;
+        modifyBookStatement.executeUpdate();
+        return;
+    }
+    int sizeWhere = whereAttribute.size();
+    query += "where " ;
+    i = 0;
+    for(String column : whereAttribute.keySet()){
+        query += column + " =? ";
+        if(i != sizeWhere-1) query += "and ";
+        i++;
+    }
+    System.out.println(query);
+    i = 1;
+    modifyBookStatement = con.prepareStatement(query) ;
+    for(Map.Entry<String,Object> entry : setAttribute.entrySet()){
+        if(entry.getKey().equals(SearchContract.CATEGORY_ID)){
+            Object id = getCatagroy((String) entry.getValue());
+            modifyBookStatement.setObject(i++,id);
+        }else if(entry.getKey().equals(SearchContract.PUBLISHER_ID)){
+            Object id = getPublisherWithName((String) entry.getValue());
+            modifyBookStatement.setObject(i++,id);
+        }else{
+            modifyBookStatement.setObject(i++,entry.getValue());
+        }
+    }
+    for(Object value : whereAttribute.values()){
+        System.out.println(value);
+        modifyBookStatement.setObject(i++,value);
+    }
+    modifyBookStatement.executeUpdate();
+}
+private Object getPublisherWithName(String value) throws SQLException {
+    String query = "select publisher_id from publisher where publisher_name =?";
+    PreparedStatement st = con.prepareStatement(query);
+    st.setString(1,value);
+    ResultSet set = st.executeQuery();
+    if(set.next())
+        return set.getObject(1);
+    return null;
+}
+private Object getCatagroy(String value) throws SQLException {
+    String query = "select catagory_id from catagory where catagory_name =?";
+    PreparedStatement st = con.prepareStatement(query);
+    st.setString(1,value);
+    ResultSet set = st.executeQuery();
+    if(set.next())
+      return set.getObject(1);
+    return null;
+}
     public void removeBooks (Map<String,Object> searchAttribute) throws SQLException {
         String query = " delete from book ";
 
@@ -185,5 +241,12 @@ public class ManagerRepo extends UserRepo{
     }
     public ResultSet getTop5CustomersLastThreeMonths() throws SQLException{
         return getTopCustomers.executeQuery();
+    }
+
+
+    public ResultSet getAllCreditCards() throws SQLException {
+        String query = "select * from credit_card";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
     }
 }

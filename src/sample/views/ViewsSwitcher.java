@@ -28,4 +28,10 @@ public class ViewsSwitcher {
         alert.setHeaderText(message);
         alert.showAndWait();
     }
+    public static void showSuccess(String message){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Done");
+        alert.setHeaderText(message);
+        alert.showAndWait();
+    }
 }

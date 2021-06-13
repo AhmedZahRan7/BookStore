@@ -1,8 +1,5 @@
 package sample.models;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 public class User {
 
     private String user_name;
@@ -13,23 +10,19 @@ public class User {
     private String shipping_address;
     private Integer manager;
     private Integer total_purchases;
-    private final StringProperty userProperty = new SimpleStringProperty();
+
 
 // list of his credit cards
 
-    public User(String userName, String password, String userID, String shippingAddress, String lastName, String firstName, String email, Integer manager) {
+    public User(String userName, String password, String shippingAddress, String lastName, String firstName, String email, Integer manager) {
         this.user_name = userName;
         this.password = password;
-        //  this.shipping_address = shippingAddress;
+       this.shipping_address = shippingAddress;
         this.last_name = lastName;
         this.first_name = firstName;
         this.email = email;
         this.manager = manager;
-        userProperty.setValue(userName);
         total_purchases = 0;
-    }
-    public StringProperty getUserProperty() {
-        return userProperty;
     }
 
     public User() {

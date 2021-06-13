@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane fx:controller="sample.controllers.PublishersController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="publishersTable" layoutX="-5.0" prefHeight="500.0" prefWidth="472.0" />
+      <Group layoutX="649.0" layoutY="111.0">
+         <children>
+            <TextField fx:id="publisherNameField" layoutY="17.0" />
+            <Label text="Publisher Name" />
+            <TextField fx:id="publisherAddressField" layoutY="68.0" />
+            <Label layoutY="51.0" text="Publisher Address" />
+            <TextField fx:id="publisherPhoneField" layoutY="122.0" />
+            <Label layoutY="105.0" text="Publisher Phone" />
+         </children>
+      </Group>
+      <Text layoutX="646.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Publisher" />
+      <Button fx:id="addButton" layoutX="684.0" layoutY="275.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Add" />
+      <Button fx:id="backButton" layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+      <Text layoutX="633.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Publisher" />
+      <TextField fx:id="publisherIdField" layoutX="649.0" layoutY="413.0" />
+      <Label layoutX="649.0" layoutY="396.0" text="Publisher ID" />
+      <Button fx:id="deleteButton" layoutX="685.0" layoutY="444.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Delete" />
+      <Line endX="100.0" layoutX="724.0" layoutY="336.0" startX="-100.0" stroke="#0d56dd" />
+   </children>
+</AnchorPane>
