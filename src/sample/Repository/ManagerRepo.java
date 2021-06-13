@@ -36,7 +36,7 @@ public class ManagerRepo extends UserRepo{
         confirmOrderStatement = con.prepareStatement("delete from orders where orders_id = ?");
         addBookStatement = con.prepareStatement("insert into book " +
                 " (isbn,title,price,publication_year,nocopies,threshold,publisher_id,catagory_id) values (?,?,?,?,?,?,?,?)");
-        addPublisherStatement = con.prepareStatement("insert into publisher (address,publisher_name) values (?,?) ");
+        addPublisherStatement = con.prepareStatement("insert into publisher (address,publisher_name,phone_number) values (?,?,?) ");
         addCatagoryStatement = con.prepareStatement("insert into catagory (catagory_name) values (?)");
         deleteCatagoryStatement = con.prepareStatement("delete from catagory where catagory_name = ? ");
         removePublisherStatement = con.prepareStatement("delete from publisher where publisher_name = ? ");
@@ -116,8 +116,13 @@ public class ManagerRepo extends UserRepo{
         addBookStatement.setString(4,(String) map.get(SearchContract.PUBLICATION_YEAR));
         addBookStatement.setInt(5,(Integer) map.get(SearchContract.NOCOPIES));
         addBookStatement.setInt(6,(Integer) map.get(SearchContract.THRESHOLD));
-        addBookStatement.setInt(7,(Integer) map.get(SearchContract.PUBLISHER_ID));
-        addBookStatement.setInt(8,(Integer) map.get(SearchContract.CATEGORY_ID));
+
+        Object publisherID = getPublisherWithName((String) map.get(SearchContract.PUBLISHER_NAME));
+        addBookStatement.setObject(7,publisherID);
+
+       Object catID = getCatagroy((String)map.get(SearchContract.CATEGORY));
+        addBookStatement.setObject(8, catID );
+
         addBookStatement.executeUpdate();
     }
 
@@ -127,9 +132,10 @@ public class ManagerRepo extends UserRepo{
         return st.executeQuery();
     }
 
-    public void addPublisher(String address, String publisherName) throws SQLException {
+    public void addPublisher(String address, String publisherName,String phone_number) throws SQLException {
         addPublisherStatement.setString(1,address);
         addPublisherStatement.setString(2,publisherName);
+        addPublisherStatement.setString(3,phone_number);
         addPublisherStatement.executeUpdate() ;
     }
 
@@ -153,6 +159,10 @@ public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> wh
     int sizeSet = setAttribute.size();
     int i = 0;
     for(String column : setAttribute.keySet()){
+        if(column.equals(SearchContract.PUBLISHER_NAME))
+            column=SearchContract.PUBLISHER_ID;
+        if(column.equals(SearchContract.CATEGORY))
+            column=SearchContract.CATEGORY_ID;
         query += (column + " =? ");
         if(i != sizeSet-1) query += ", ";
         i++;
@@ -174,10 +184,10 @@ public void modifyBooks (Map<String,Object> setAttribute , Map<String,Object> wh
     i = 1;
     modifyBookStatement = con.prepareStatement(query) ;
     for(Map.Entry<String,Object> entry : setAttribute.entrySet()){
-        if(entry.getKey().equals(SearchContract.CATEGORY_ID)){
+        if(entry.getKey().equals(SearchContract.CATEGORY)){
             Object id = getCatagroy((String) entry.getValue());
             modifyBookStatement.setObject(i++,id);
-        }else if(entry.getKey().equals(SearchContract.PUBLISHER_ID)){
+        }else if(entry.getKey().equals(SearchContract.PUBLISHER_NAME)){
             Object id = getPublisherWithName((String) entry.getValue());
             modifyBookStatement.setObject(i++,id);
         }else{

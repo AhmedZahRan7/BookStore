@@ -10,13 +10,13 @@ public class Publisher {
     private Integer publisher_id;
     private String Address;
     private String publisher_name;
-    private String phoneNumber;
+    private String phone_number;
 
     public Publisher(int id, String address, String name,String phoneNumber) {
         this.publisher_id = id;
         this.Address = address;
         this.publisher_name = name;
-        this.phoneNumber = phoneNumber;
+        this.phone_number = phoneNumber;
     }
 
     public Publisher() {
@@ -50,10 +50,10 @@ public class Publisher {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phone_number;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phone_number = phoneNumber;
     }
 }

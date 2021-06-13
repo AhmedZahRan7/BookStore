@@ -81,16 +81,11 @@ public class ManagerViewModel extends UserViewModel{
 
 
 
-    public synchronized void addPublisher(String address, String publisherName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
-        repo.addPublisher(address,publisherName);
+    public synchronized void addPublisher(String address, String publisherName,String phone, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+        repo.addPublisher(address,publisherName,phone);
         callBack.onSuccess();
     }
 
-    /*TODO implement this*/
-    public synchronized void addPublisher(String address, String publisherName,String phone ,IUserCallBack callBack) throws SQLException, ClassNotFoundException {
-//        repo.addPublisher(address,publisherName);
-//        callBack.onSuccess();
-    }
 
     public synchronized void addCatagory(String catagoryName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
        repo.addCatagory(catagoryName);

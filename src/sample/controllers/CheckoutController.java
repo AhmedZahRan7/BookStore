@@ -9,13 +9,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sample.callBacks.IUserCallBack;
 import sample.models.Book;
+import sample.models.User;
 import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -108,8 +111,74 @@ public class CheckoutController {
             public void handle(ActionEvent actionEvent){
                 System.out.println("pay: ");
                 System.out.println(cardIdField.getText().trim());
-                System.out.println(cvvField.getText().trim());
+                String cardID = cardIdField.getText().trim();
+                String date = dateField.getValue().toString();
+                System.out.println("DATE : "+date);
                 System.out.println(dateField.getValue());
+                try {
+                    UserViewModel.get_instance().addCreditCard(cardID,date,CurrentUser.getUser().getUser_name(), new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException, ClassNotFoundException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    UserViewModel.get_instance().writeCart(CurrentUser.getUser().getUser_name(), new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException, ClassNotFoundException {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
 //                UserViewModel.get_instance().checkout();
             }
         });

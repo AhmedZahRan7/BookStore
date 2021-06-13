@@ -75,10 +75,10 @@ public class AdminPanelController {
                     HashMap<String,Object> map = new HashMap<>();
                     map.put(SearchContract.ISBN,isbn);
                     map.put(SearchContract.TITLE,title);
-                    map.put(SearchContract.PUBLISHER_ID,Integer.parseInt(publisher));
+                    map.put(SearchContract.PUBLISHER_NAME,publisher);
                     map.put(SearchContract.PUBLICATION_YEAR,publicationTear);
                     map.put(SearchContract.PRICE,Float.parseFloat(price));
-                    map.put(SearchContract.CATEGORY_ID,Integer.parseInt(cat));
+                    map.put(SearchContract.CATEGORY,cat);
                     map.put(SearchContract.NOCOPIES, Integer.parseInt(copies));
                     map.put(SearchContract.THRESHOLD, Integer.parseInt(threshold));
                     ManagerViewModel.get_instance().addBook(map,
@@ -385,7 +385,7 @@ public class AdminPanelController {
                 SearchContract.NOCOPIES,
                 SearchContract.THRESHOLD,
                 SearchContract.CATEGORY,
-                SearchContract.PUBLISHER_ID,
+                SearchContract.PUBLISHER_NAME,
                 SearchContract.PUBLICATION_YEAR
                 );
     }

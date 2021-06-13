@@ -108,8 +108,8 @@ public class UserViewModel {
       userCallBack.onSuccess();
     }
 
-    public synchronized void writeCart(Cart cart, String userName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
-      repo.writeCart(cart.getSelectedBooks(),userName);
+    public synchronized void writeCart(String userName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+      repo.writeCart(userCartBooks.getSelectedBooks(),userName);
       callBack.onSuccess();
     }
 
