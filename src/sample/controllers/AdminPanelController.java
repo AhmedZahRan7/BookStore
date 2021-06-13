@@ -78,7 +78,7 @@ public class AdminPanelController {
                 List<String> authors = Arrays.asList(authorsNamesField.getText().split(","));
 
                 if(
-                        isbn.length()!=13 ||
+
                                 title.isEmpty() ||
                                 copies.isEmpty() ||
                                 publisher.isEmpty() ||
@@ -90,6 +90,23 @@ public class AdminPanelController {
                 ) {
                     ViewsSwitcher.showAlert("No field can be empty");
                     return;
+                }
+                if(isbn.length()!=13 ){
+                    ViewsSwitcher.showAlert("ISBN must be 13 digit");
+                    return;
+                }else {
+                    try {
+                        Long.parseLong(isbn);
+                    }catch (Exception e){
+                        ViewsSwitcher.showAlert("ISBN must be 13 digit");
+                        return;
+                    }
+                }
+                if(Integer.parseInt(threshold) > Integer.parseInt(copies))
+                {
+                    ViewsSwitcher.showAlert("Threshold must be less than number of copies available");
+                    return;
+
                 }
                 try {
                     HashMap<String,Object> map = new HashMap<>();

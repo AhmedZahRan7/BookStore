@@ -109,7 +109,7 @@ public class Book {
 
     public StringProperty getAuthorsProperty(){
         String concatenation = "";
-        for (Author a : this.authors) concatenation = concatenation.concat(a.getAuthorName()).concat(" ,");
+        for (Author a : this.authors) concatenation = concatenation.concat(a.getAuthor_Name()).concat(" ,");
         return new SimpleStringProperty(concatenation);
     }
 }

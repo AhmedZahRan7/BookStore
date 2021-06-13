@@ -116,7 +116,7 @@ public class ManagerViewModel extends UserViewModel{
       List<Object> list = new ArrayList<>();
       while (rs.next()){
           Book book = resultSetParser.retrieveBook(rs);
-          book.setNoCopies(rs.findColumn("Total_Saled_Copies"));
+          book.setNoCopies(rs.getInt("Total_Saled_Copies"));
           list.add(book);
       }
         callBack.onSuccess(list);
@@ -127,7 +127,7 @@ public class ManagerViewModel extends UserViewModel{
         List<Object> list = new ArrayList<>();
        while (rs.next()){
            Book book = resultSetParser.retrieveBook(rs);
-           book.setNoCopies(rs.findColumn("Total_Sales"));
+           book.setNoCopies(rs.getInt("Total_Sales"));
            list.add(book);
        }
        callBack.onSuccess(list);
@@ -141,6 +141,19 @@ public class ManagerViewModel extends UserViewModel{
             list.add(user);
         }
         callBack.onSuccess(list);
+    }
+    public synchronized void getAllAuthors(IUserCallBack callBack) throws SQLException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        ResultSet rs = repo.getAllAuthors();
+        List<Object> list = new ArrayList<>();
+        while (rs.next()){
+            Author author = resultSetParser.retrieveAuthor(rs);
+            list.add(author);
+        }
+        callBack.onSuccess(list);
+    }
+    public void removeAuthor(Integer ID,IUserCallBack callBack) throws SQLException, ClassNotFoundException {
+        repo.removeAuthor(ID);
+        callBack.onSuccess();
     }
     public synchronized void getOrders(IUserCallBack callBack) throws SQLException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         ResultSet rs = repo.getOrders();

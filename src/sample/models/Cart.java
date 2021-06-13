@@ -26,15 +26,17 @@ public class Cart {
         this.addBook(book, noItem);
     }
 
-    public void addBook(Book book, int noItem) {
+    public void addBook(Book book, int noItem) throws IndexOutOfBoundsException {
         Book selectedBook = this.getSelectedBook(book.getISBN());
-        if(noItem > book.getNoCopies())
-            throw new IndexOutOfBoundsException();
         if(selectedBook == null)
             this.selectedBooks.put(book, noItem);
+        else if(this.selectedBooks.get(book)+noItem > book.getNoCopies())
+            throw (new IndexOutOfBoundsException("No remaining copies to add"));
+
         else
             this.selectedBooks.put(book, this.selectedBooks.get(book) + noItem);
         this.totalPrice += noItem * book.getPrice();
+        System.out.println(book.getNoCopies()+"******************"+this.selectedBooks.get(book));
     }
 
     private Book getSelectedBook(String ISBN) {

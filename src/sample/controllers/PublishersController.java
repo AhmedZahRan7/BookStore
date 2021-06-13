@@ -110,7 +110,7 @@ public class PublishersController {
         authorsData.clear();
         new Thread(() -> {
             try {
-                ManagerViewModel.get_instance().getAllPublishers(new IUserCallBack() {
+                ManagerViewModel.get_instance().getAllAuthors(new IUserCallBack() {
                     @Override
                     public void onSuccess(User user) {
 
@@ -220,21 +220,37 @@ public class PublishersController {
                 throwable.printStackTrace();
             }
         });
-
         addAuthorButton.setOnAction(actionEvent -> {
             try {
                 ManagerViewModel.get_instance().addAuthor(addAuthorNameField.getText().trim());
+                setAuthorsTableData();
             } catch (SQLException | ClassNotFoundException throwables) {
                 throwables.printStackTrace();
             }
         });
-
         deleteAuthorButton.setOnAction(actionEvent -> {
-//            try {
-//                ManagerViewModel.get_instance().removeAuthor();
-//            } catch (SQLException | ClassNotFoundException throwables) {
-//                throwables.printStackTrace();
-//            }
+            try {
+                ManagerViewModel.get_instance().removeAuthor(Integer.parseInt(deleteAuthorNameField.getText().trim()), new IUserCallBack() {
+                    @Override
+                    public void onSuccess(User user) throws SQLException, ClassNotFoundException {
+                    }
+                    @Override
+                    public void onSuccess(Book book) {
+                    }
+                    @Override
+                    public void onSuccess(List<Object> data) {
+                    }
+                    @Override
+                    public void onSuccess() throws SQLException, ClassNotFoundException {
+                        setAuthorsTableData();
+                    }
+                    @Override
+                    public void onFailure() {
+                    }
+                });
+            } catch (SQLException | ClassNotFoundException throwables) {
+                throwables.printStackTrace();
+            }
         });
 
     }

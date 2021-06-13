@@ -6,21 +6,21 @@ public class Author {
     public String author_Name;
     public Author(){
     }
-    public Author(Integer id, String authorName) {
-        this.author_id = id;
-        this.author_Name = authorName;
+    public Author(Integer author_id, String author_Name) {
+        this.author_id = author_id;
+        this.author_Name = author_Name;
     }
-    public Integer getId() {
+    public Integer getAuthor_id() {
         return author_id;
     }
-    public void setId(Integer id) {
-        this.author_id = id;
+    public void setAuthor_id(Integer author_id) {
+        this.author_id = author_id;
     }
-    public String getAuthorName() {
+    public String getAuthor_Name() {
         return author_Name;
     }
-    public void setAuthorName(String authorName) {
-        this.author_Name = authorName;
+    public void setAuthor_Name(String author_Name) {
+        this.author_Name = author_Name;
     }
     StringProperty getAuthorProperty(){
         return new SimpleStringProperty(this.author_Name);

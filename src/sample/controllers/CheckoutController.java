@@ -56,6 +56,7 @@ public class CheckoutController {
         try{
             costLabel.setText(String.valueOf(UserViewModel.get_instance().getCart().getTotalPurchase()));
         } catch (SQLException throwables) {
+            ViewsSwitcher.showAlert(throwables.getMessage());
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -66,6 +67,7 @@ public class CheckoutController {
                 data.add(new CartEntry(entry.getKey().getISBN(), entry.getValue()));
             }
         } catch (SQLException throwables) {
+            ViewsSwitcher.showAlert(throwables.getMessage());
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -84,9 +86,9 @@ public class CheckoutController {
             public void handle(ActionEvent actionEvent){
                 try {
                     UserViewModel.get_instance().addToCart(addField.getText().trim(),1);
-                    addField.setText("");
                     setDataInTable();
                 } catch (Exception throwables) {
+                    ViewsSwitcher.showAlert(throwables.getMessage());
                     throwables.printStackTrace();
                 }
             }
@@ -119,62 +121,52 @@ public class CheckoutController {
                     UserViewModel.get_instance().addCreditCard(cardID,date,CurrentUser.getUser().getUser_name(), new IUserCallBack() {
                         @Override
                         public void onSuccess(User user) {
-
                         }
-
                         @Override
                         public void onSuccess(Book book) {
-
                         }
-
                         @Override
                         public void onSuccess(List<Object> data) {
-
                         }
-
                         @Override
                         public void onSuccess() throws SQLException, ClassNotFoundException {
-
                         }
-
                         @Override
                         public void onFailure() {
-
                         }
                     });
                 } catch (SQLException throwables) {
+                    ViewsSwitcher.showAlert(throwables.getMessage());
                     throwables.printStackTrace();
                 } catch (ClassNotFoundException e) {
+
                     e.printStackTrace();
                 }
                 try {
                     UserViewModel.get_instance().writeCart(CurrentUser.getUser().getUser_name(), new IUserCallBack() {
                         @Override
                         public void onSuccess(User user) throws SQLException, ClassNotFoundException {
-                            UserViewModel.get_instance().removeCart();
                         }
-
                         @Override
                         public void onSuccess(Book book) {
-
                         }
-
                         @Override
                         public void onSuccess(List<Object> data) {
-
                         }
-
                         @Override
                         public void onSuccess() throws SQLException, ClassNotFoundException {
-
+                            UserViewModel.get_instance().removeCart();
+                            cvvField.setText("");
+                            cardIdField.setText("");
+                            dateField.setValue(null);
+                            setDataInTable();
                         }
-
                         @Override
                         public void onFailure() {
-
                         }
                     });
                 } catch (SQLException | ClassNotFoundException throwables) {
+                    ViewsSwitcher.showAlert(throwables.getMessage());
                     throwables.printStackTrace();
                 }
             }

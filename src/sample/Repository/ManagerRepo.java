@@ -1,13 +1,11 @@
 package sample.Repository;
 
-import sample.callBacks.IUserCallBack;
-import sample.models.Book;
-import sample.models.User;
 
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +88,12 @@ public class ManagerRepo extends UserRepo{
         }
 
     }
+    public void removeAuthor(Integer ID) throws SQLException {
+        String query = "delete from author where author_id=?";
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setObject(1,ID);
+        ps.executeUpdate();
+    }
 
     public synchronized ResultSet getAllUsers() throws SQLException {
         String query = "select * from user";
@@ -138,6 +142,7 @@ public class ManagerRepo extends UserRepo{
     }
 
     public void addBook(Map<String,Object> map) throws SQLException {
+
         addBookStatement.setString(1, (String) map.get(SearchContract.ISBN));
         addBookStatement.setString(2,(String) map.get(SearchContract.TITLE));
         addBookStatement.setFloat(3,(Float) map.get(SearchContract.PRICE));
@@ -149,8 +154,18 @@ public class ManagerRepo extends UserRepo{
 
        Object catID = getCatagroy((String)map.get(SearchContract.CATEGORY));
         addBookStatement.setObject(8, catID );
-        addBookStatement.executeUpdate();
-        insertAuthorForBook((String) map.get(SearchContract.ISBN),(List<String>)map.get(SearchContract.LIST_OF_AUTHORS));
+        con.setAutoCommit(false);
+        try {
+
+            addBookStatement.executeUpdate();
+            insertAuthorForBook((String) map.get(SearchContract.ISBN),(List<String>)map.get(SearchContract.LIST_OF_AUTHORS));
+            con.commit();
+        }catch (SQLException e){
+            con.rollback();
+           throw new SQLException("ERROR in inserting book\n"+e.getMessage());
+        }finally {
+            con.setAutoCommit(true);
+        }
 
     }
 
@@ -287,4 +302,10 @@ private Object getCatagroy(String value) throws SQLException {
         PreparedStatement st = con.prepareStatement(query);
         return st.executeQuery();
     }
+    public ResultSet getAllAuthors() throws SQLException {
+        String query = "select * from author";
+        PreparedStatement st = con.prepareStatement(query);
+        return st.executeQuery();
+    }
+
 }
