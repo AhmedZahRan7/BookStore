@@ -10,30 +10,51 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-
 <BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.PublishersController">
    <center>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="950.0" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="publishersTable" layoutX="-5.0" prefHeight="500.0" prefWidth="472.0" />
-            <Group layoutX="649.0" layoutY="111.0">
+            <TableView fx:id="publishersTable" layoutX="-5.0" prefHeight="500.0" prefWidth="385.0" />
+            <Group layoutX="383.0" layoutY="55.0">
                <children>
-                  <TextField fx:id="publisherNameField" layoutY="17.0" />
-                  <Label text="Publisher Name" />
-                  <TextField fx:id="publisherAddressField" layoutY="68.0" />
-                  <Label layoutY="51.0" text="Publisher Address" />
-                  <TextField fx:id="publisherPhoneField" layoutY="122.0" />
-                  <Label layoutY="105.0" text="Publisher Phone" />
+                  <Group layoutX="25.5" layoutY="52.9775390625">
+                     <children>
+                        <TextField fx:id="publisherNameField" layoutY="17.0" />
+                        <Label text="Publisher Name" />
+                        <TextField fx:id="publisherAddressField" layoutY="68.0" />
+                        <Label layoutY="51.0" text="Publisher Address" />
+                        <TextField fx:id="publisherPhoneField" layoutY="122.0" />
+                        <Label layoutY="105.0" text="Publisher Phone" />
+                     </children>
+                  </Group>
+                  <Text layoutX="20.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Publisher" />
+                  <Button fx:id="addButton" layoutX="60.5" layoutY="216.9775390625" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Add" />
+                  <Text layoutX="10.0" layoutY="317.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Publisher" />
+                  <TextField fx:id="publisherIdField" layoutX="23.0" layoutY="343.0" />
+                  <Label layoutX="23.0" layoutY="326.0" text="Publisher Name" />
+                  <Button fx:id="deleteButton" layoutX="59.0" layoutY="374.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Delete" />
+                  <Line endX="100.0" layoutX="50.0" layoutY="278.0" startX="-5.5" stroke="#0d56dd" />
                </children>
             </Group>
-            <Text layoutX="646.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Publisher" />
-            <Button fx:id="addButton" layoutX="684.0" layoutY="275.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Add" />
+            <TableView id="authorsTable" fx:id="authorsTable" layoutX="582.0" prefHeight="500.0" prefWidth="184.0" />
             <Button fx:id="backButton" layoutX="879.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
-            <Text layoutX="633.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Publisher" />
-            <TextField fx:id="publisherIdField" layoutX="649.0" layoutY="413.0" />
-            <Label layoutX="649.0" layoutY="396.0" text="Publisher Name" />
-            <Button fx:id="deleteButton" layoutX="685.0" layoutY="444.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Delete" />
-            <Line endX="100.0" layoutX="724.0" layoutY="336.0" startX="-100.0" stroke="#0d56dd" />
+            <Group layoutX="755.0" layoutY="74.0">
+               <children>
+                  <Group layoutX="25.5" layoutY="52.9775390625">
+                     <children>
+                        <TextField id="AuthorNameAddField" fx:id="addAuthorNameField" layoutY="17.0" />
+                        <Label text="Author Name" />
+                     </children>
+                  </Group>
+                  <Text layoutX="28.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Author" />
+                  <Button id="addAuthorButton" fx:id="addAuthorButton" layoutX="58.0" layoutY="109.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Add" />
+                  <Text layoutX="26.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Author" />
+                  <TextField id="AuthorNameDeleteField" fx:id="deleteAuthorNameField" layoutX="29.0" layoutY="274.0" />
+                  <Label layoutX="29.0" layoutY="257.0" text="Author ID" />
+                  <Button id="deleteAuthorButton" fx:id="deleteAuthorButton" layoutX="74.0" layoutY="309.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Delete" />
+                  <Line endX="100.0" layoutX="52.0" layoutY="191.0" startX="-5.5" stroke="#0d56dd" />
+               </children>
+            </Group>
          </children>
       </AnchorPane>
    </center>

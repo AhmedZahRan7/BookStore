@@ -12,6 +12,7 @@ import sample.Repository.SearchContract;
 import sample.callBacks.IUserCallBack;
 import sample.models.*;
 import sample.viewmodels.ManagerViewModel;
+import sample.viewmodels.UserViewModel;
 import sample.views.ViewsSwitcher;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -32,6 +33,9 @@ public class AdminPanelController {
     @FXML TextField orderIdConfirmField;
     @FXML TextField userNameToPromoteField;
     @FXML TextField thresholdField;
+    @FXML TextField authorsNamesField;
+    @FXML TextField removeBookField;
+    @FXML Button removeBookButton;
     @FXML Button addBookButton;
     @FXML Button editBookButton;
     @FXML Button orderButton;
@@ -71,6 +75,22 @@ public class AdminPanelController {
                 String price = priceAddField.getText().trim();
                 String cat = categoryAddField.getText().trim();
                 String threshold = thresholdField.getText().trim();
+                List<String> authors = Arrays.asList(authorsNamesField.getText().split(","));
+
+                if(
+                        isbn.length()!=13 ||
+                                title.isEmpty() ||
+                                copies.isEmpty() ||
+                                publisher.isEmpty() ||
+                                publicationTear.isEmpty() ||
+                                price.isEmpty() ||
+                                cat.isEmpty() ||
+                                threshold.isEmpty() ||
+                                authors.isEmpty()
+                ) {
+                    ViewsSwitcher.showAlert("No field can be empty");
+                    return;
+                }
                 try {
                     HashMap<String,Object> map = new HashMap<>();
                     map.put(SearchContract.ISBN,isbn);
@@ -81,6 +101,7 @@ public class AdminPanelController {
                     map.put(SearchContract.CATEGORY,cat);
                     map.put(SearchContract.NOCOPIES, Integer.parseInt(copies));
                     map.put(SearchContract.THRESHOLD, Integer.parseInt(threshold));
+                    map.put(SearchContract.LIST_OF_AUTHORS,authors);
                     ManagerViewModel.get_instance().addBook(map,
                             new IUserCallBack() {
                         @Override
@@ -109,6 +130,46 @@ public class AdminPanelController {
                             priceAddField.setText("");
                             categoryAddField.setText("");
                             thresholdField.setText("");
+                            authorsNamesField.setText("");
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        removeBookButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                HashMap<String,Object> map = new HashMap<>();
+                map.put(SearchContract.ISBN,removeBookField.getText().trim());
+                try {
+                    ManagerViewModel.get_instance().removeBook(map, new IUserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Book book) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(List<Object> data) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() throws SQLException, ClassNotFoundException {
+                            removeBookField.setText("");
                         }
 
                         @Override

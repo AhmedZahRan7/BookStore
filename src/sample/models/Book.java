@@ -1,5 +1,10 @@
 package sample.models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.List;
+
 public class Book {
 
     private String ISBN;
@@ -10,9 +15,11 @@ public class Book {
     private Catagory catagory;
     private Publisher publisher;
     private String publication_year;
-
+    private List<Author> authors;
     public Book(String ISBN, String title, Integer noCopies, Integer threshold,
-                Catagory category, Publisher publisher, String publicationYear, float price) {
+                Catagory category, Publisher publisher,
+                String publicationYear, float price,
+                List<Author> authors) {
         this.ISBN = ISBN;
         this.title = title;
         this.noCopies = noCopies;
@@ -21,6 +28,7 @@ public class Book {
         this.publisher = publisher;
         this.publication_year = publicationYear;
         this.price = price;
+        this.authors = authors;
     }
 
     public Book() {
@@ -91,6 +99,17 @@ public class Book {
         this.price = price;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
 
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
 
+    public StringProperty getAuthorsProperty(){
+        String concatenation = "";
+        for (Author a : this.authors) concatenation = concatenation.concat(a.getAuthorName()).concat(" ,");
+        return new SimpleStringProperty(concatenation);
+    }
 }

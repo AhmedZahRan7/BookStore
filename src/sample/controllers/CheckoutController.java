@@ -150,8 +150,8 @@ public class CheckoutController {
                 try {
                     UserViewModel.get_instance().writeCart(CurrentUser.getUser().getUser_name(), new IUserCallBack() {
                         @Override
-                        public void onSuccess(User user) {
-
+                        public void onSuccess(User user) throws SQLException, ClassNotFoundException {
+                            UserViewModel.get_instance().removeCart();
                         }
 
                         @Override
@@ -174,12 +174,9 @@ public class CheckoutController {
 
                         }
                     });
-                } catch (SQLException throwables) {
+                } catch (SQLException | ClassNotFoundException throwables) {
                     throwables.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
-//                UserViewModel.get_instance().checkout();
             }
         });
     }

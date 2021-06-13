@@ -20,4 +20,7 @@ public class SearchContract {
     public final static String CATEGORY_ID = "catagory_id";
     public final static String TOTAL_PURCHASE = "total_purchases";
     public final static String MANAGER = "manager";
+    public final static String AUTHOR_ID = "Author_ID";
+    public final static String AUTHOR_NAME = "Author_name";
+    public final static String LIST_OF_AUTHORS = "List_of_Authors";
 }

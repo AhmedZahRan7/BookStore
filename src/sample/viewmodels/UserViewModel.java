@@ -35,7 +35,7 @@ public class UserViewModel {
         callBack.onSuccess();
     }
 
-    public synchronized void getUser(String userName, String password, IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public synchronized void getUser(String userName, String password, IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         ResultSet set = repo.getUser(userName,password);
         User user = null;
         if(set.next()) {
@@ -49,15 +49,18 @@ public class UserViewModel {
         Book book = null;
         if(rs.next()) {
             book = resultSetParser.retrieveBook(rs);
+            List<Author> author = getAuthors(book.getISBN());
+            book.setAuthors(author);
         }
         callBack.onSuccess(book);
     }
-
     public synchronized void getBooks(Map<String,Object> searchAttribute ,IUserCallBack callBack) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ResultSet set = repo.getBooks(searchAttribute);
         Map<String,Book> bookMap = new HashMap<>();
         while (set.next()) {
             Book book = resultSetParser.retrieveBook(set);
+            List<Author> list = getAuthors(book.getISBN());
+            book.setAuthors(list);
             bookMap.put(book.getISBN(), book);
         }
         searchResult = bookMap;
@@ -132,15 +135,30 @@ public class UserViewModel {
         }
         callBack.onSuccess(list);
     }
-
     public synchronized void getAllBooks(IUserCallBack callBack) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         ResultSet rs = repo.getAllBooks();
         List<Object> list = new ArrayList<>();
+        Map<String,Boolean> ISBNmp = new HashMap<>();
         while (rs.next()){
             Book book = resultSetParser.retrieveBook(rs);
-            list.add(book);
+            if(!ISBNmp.containsKey(book.getISBN())) {
+                ISBNmp.put(book.getISBN(), true);
+                List<Author> authors = getAuthors(book.getISBN());
+                book.setAuthors(authors);
+                list.add(book);
+            }
         }
         callBack.onSuccess(list);
+    }
+
+    private List<Author> getAuthors(String isbn) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        ResultSet rs = repo.getAuthors(isbn);
+        List<Author> list = new ArrayList<>();
+        while (rs.next()){
+            Author author = resultSetParser.retrieveAuthor(rs);
+            list.add(author);
+        }
+        return list;
     }
 
 }

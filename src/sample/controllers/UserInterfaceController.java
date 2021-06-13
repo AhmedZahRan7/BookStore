@@ -49,13 +49,15 @@ public class UserInterfaceController {
         TableColumn<Book, Float> price = new TableColumn<Book, Float>("Price");
         TableColumn<Book, String> publisher = new TableColumn<Book, String>("Publisher");
         TableColumn<Book, String> category = new TableColumn<Book, String>("Category");
+        TableColumn<Book, String> authors = new TableColumn<Book, String>("Authors");
         TableColumn<Book, String> date = new TableColumn<Book, String>("publicationYear");
-        isbn.setMinWidth(150);
-        title.setMinWidth(100);
+        isbn.setMinWidth(120);
+        title.setMinWidth(80);
         noCopies.setMinWidth(40);
         price.setMinWidth(40);
         publisher.setMinWidth(40);
         category.setMinWidth(40);
+        authors.setMinWidth(150);
         date.setMinWidth(100);
         isbn.setCellValueFactory(new PropertyValueFactory<Book,String>("ISBN"));
         title.setCellValueFactory(new PropertyValueFactory<Book,String>(SearchContract.TITLE));
@@ -64,7 +66,8 @@ public class UserInterfaceController {
         publisher.setCellValueFactory(tf->tf.getValue().getPublisher().getPublisherNameProb());
         category.setCellValueFactory(tf->tf.getValue().getCatagory().getGategoryProp());
         date.setCellValueFactory(new PropertyValueFactory<Book,String>(SearchContract.PUBLICATION_YEAR));
-        tableView.getColumns().addAll(isbn,title,noCopies,price,publisher,category,date);
+        authors.setCellValueFactory(tf->tf.getValue().getAuthorsProperty());
+        tableView.getColumns().addAll(isbn,title,noCopies,price,publisher,category,authors,date);
     }
     void setDataInTableFromDataBase() throws SQLException, ClassNotFoundException {
         new Thread(new Runnable() {
@@ -145,6 +148,14 @@ public class UserInterfaceController {
             public void handle(ActionEvent actionEvent) {
                 System.out.println("logout");
                 CurrentUser.setUser(null);
+                try {
+                    UserViewModel.get_instance().removeCart();
+//                    UserViewModel.get_instance()
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 ViewsSwitcher.getInstance().switchTo((Stage) logoutButton.getScene().getWindow(),"login");
             }
         });
@@ -160,6 +171,8 @@ public class UserInterfaceController {
                         map.put(SearchContract.TITLE,searchFor);
                         map.put(SearchContract.PUBLISHER_NAME,searchFor);
                         map.put(SearchContract.CATEGORY,searchFor);
+                        map.put(SearchContract.AUTHOR_NAME,searchFor);
+
                         if (searchFor.isEmpty()) map = null;
                         try {
                             UserViewModel.get_instance().getBooks(map, new IUserCallBack() {

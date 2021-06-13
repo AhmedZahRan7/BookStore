@@ -27,9 +27,14 @@ public class ManagerRepo extends UserRepo{
     private PreparedStatement getTopCustomers;
     private PreparedStatement getTotalLastMonthsSales;
     private PreparedStatement getPublisherStatement;
-    private PreparedStatement addUserStatement;
+    private PreparedStatement addAuthorStatement;
+    private PreparedStatement getAuthorStatment;
+    private PreparedStatement insertBookAuthor;
     public ManagerRepo() throws SQLException, ClassNotFoundException {
         super();
+        insertBookAuthor = con.prepareStatement("insert into book_has_author(ISBN,Author_ID) values (?,?)");
+        addAuthorStatement = con.prepareStatement("insert into author(author_name) values (?)");
+        getAuthorStatment = con.prepareStatement("select * from author where author_id = ?");
         getPublisherStatement = con.prepareStatement("select from publisher where publisher_id = ?");
         promoteUserStatement = con.prepareStatement("update user set manager=1 where user_name = ?");
         orderBookStatement = con.prepareStatement("insert into orders (isbn,nocopies) values (?,?)");
@@ -70,7 +75,21 @@ public class ManagerRepo extends UserRepo{
     }
 
 
+    private void insertAuthorForBook(String ISBN,List<String> AuthorsName) throws SQLException{
+        int i=0;
 
+        for(String AuthorName : AuthorsName){
+            insertBookAuthor.setString(1,ISBN);
+            Object AuthorID = getAuthorWithName(AuthorName);
+            insertBookAuthor.setObject(2,AuthorID);
+            insertBookAuthor.addBatch();
+            i++;
+            if (i % 20 == 0 || i == AuthorsName.size()) {
+                insertBookAuthor.executeBatch(); // Execute every 20 items.
+            }
+        }
+
+    }
 
     public synchronized ResultSet getAllUsers() throws SQLException {
         String query = "select * from user";
@@ -97,6 +116,15 @@ public class ManagerRepo extends UserRepo{
         return  getPublisherStatement.executeQuery();
     }
 
+    public void addAuthor(String author_name) throws SQLException{
+        addAuthorStatement.setString(1,author_name);
+        addAuthorStatement.executeUpdate();
+
+    }
+    public ResultSet getAuthorWithID(String ID) throws SQLException{
+        getAuthorStatment.setString(1,ID);
+        return getAuthorStatment.executeQuery();
+    }
 
     public void orderBook(String ISBN, int NOCopies) throws SQLException {
      orderBookStatement.setString(1,ISBN);
@@ -116,14 +144,14 @@ public class ManagerRepo extends UserRepo{
         addBookStatement.setString(4,(String) map.get(SearchContract.PUBLICATION_YEAR));
         addBookStatement.setInt(5,(Integer) map.get(SearchContract.NOCOPIES));
         addBookStatement.setInt(6,(Integer) map.get(SearchContract.THRESHOLD));
-
         Object publisherID = getPublisherWithName((String) map.get(SearchContract.PUBLISHER_NAME));
         addBookStatement.setObject(7,publisherID);
 
        Object catID = getCatagroy((String)map.get(SearchContract.CATEGORY));
         addBookStatement.setObject(8, catID );
-
         addBookStatement.executeUpdate();
+        insertAuthorForBook((String) map.get(SearchContract.ISBN),(List<String>)map.get(SearchContract.LIST_OF_AUTHORS));
+
     }
 
     public ResultSet getOrders() throws SQLException {

@@ -86,6 +86,12 @@ public class ManagerViewModel extends UserViewModel{
         callBack.onSuccess();
     }
 
+    public synchronized void addAuthor(String author_name) throws SQLException {
+          repo.addAuthor(author_name);
+
+    }
+
+
 
     public synchronized void addCatagory(String catagoryName, IUserCallBack callBack) throws SQLException, ClassNotFoundException {
        repo.addCatagory(catagoryName);

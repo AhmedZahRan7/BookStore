@@ -52,7 +52,6 @@ public class Top10BooksController {
     }
 
     void setTableData(){
-
         new Thread(new Runnable() {
             @Override
             public void run() {

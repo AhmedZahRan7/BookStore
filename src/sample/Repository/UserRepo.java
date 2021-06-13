@@ -16,10 +16,10 @@ public class UserRepo {
     protected PreparedStatement deleteCartStatement;
     protected PreparedStatement addCreditCard;
     protected PreparedStatement removeCreditCard;
-    private PreparedStatement getCatagoryStatement;
-    protected  PreparedStatement addUserStatement;
-
+    protected PreparedStatement getCatagoryStatement;
+    protected PreparedStatement addUserStatement;
     protected PreparedStatement selectBookWithIsbn;
+    protected PreparedStatement getAuthorsStatement;
     public UserRepo() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection(
@@ -37,6 +37,8 @@ public class UserRepo {
         getCatagoryStatement = con.prepareStatement("select from catagory where catagory_id = ?");
         addUserStatement = con.prepareStatement("insert into user (user_name,first_name,last_name,email,password" +
                 ",shipping_address,manager) values (?,?,?,?,?,?,0)");
+        getAuthorsStatement = con.prepareStatement("select a.author_name , a.author_id from author as a, book_has_author as ba \n" +
+                "where ba.isbn = ? AND a.Author_Id = ba.Author_Id");
     }
     public void closeConnection() throws SQLException {
         con.close();
@@ -44,7 +46,7 @@ public class UserRepo {
 
 
     public synchronized ResultSet getAllBooks() throws SQLException {
-        String query = "select * from book";
+        String query = "select * from book natural join catagory natural join publisher natural join book_has_author natural join author ";
         PreparedStatement st = con.prepareStatement(query);
         return st.executeQuery();
     }
@@ -65,7 +67,7 @@ public class UserRepo {
         return selectUserStatement.executeQuery();
     }
     public ResultSet getBooks(Map<String,Object> searchAttribute ) throws SQLException {
-        String query = " select * from book natural join publisher natural join catagory";
+        String query = " select * from book natural join publisher natural join catagory natural join book_has_author natural join author";
 
         if(searchAttribute == null){
             selectBookStatement = con.prepareStatement(query);
@@ -104,11 +106,24 @@ public class UserRepo {
             }
         }
     }
+    protected Object getAuthorWithName(String value) throws SQLException {
+        String query = "select author_id from author where author_name =?";
+        PreparedStatement st = con.prepareStatement(query);
+        st.setString(1,value);
+        ResultSet set = st.executeQuery();
+        if(set.next())
+            return set.getObject(1);
+        return null;
+    }
     public void addCreditCard(String cardNo,String expireDate,String userName) throws  SQLException{
         addCreditCard.setString(1,cardNo);
         addCreditCard.setString(2,expireDate);
         addCreditCard.setString(3,userName);
         addCreditCard.executeUpdate();
+    }
+    public ResultSet getAuthors(String isbn) throws SQLException {
+        getAuthorsStatement.setString(1,isbn);
+        return getAuthorsStatement.executeQuery();
     }
     public void removeCreditCard(String cardID) throws SQLException {
         removeCreditCard.setString(1,cardID);

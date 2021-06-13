@@ -18,6 +18,7 @@ public class ResultSetParser<T> {
     private List<Field> orderFields;
     private List<Field> checkoutFields;
     private List<Field> creditCardFields;
+    private List<Field> authorFields;
     public ResultSetParser(){
         bookFields = Arrays.asList(Book.class.getDeclaredFields());
         publisherFields = Arrays.asList(Publisher.class.getDeclaredFields());
@@ -26,7 +27,8 @@ public class ResultSetParser<T> {
         orderFields = Arrays.asList(Order.class.getDeclaredFields());
         checkoutFields = Arrays.asList(Checkout.class.getDeclaredFields());
         creditCardFields = Arrays.asList(CreditCard.class.getDeclaredFields());
-
+        authorFields = Arrays.asList(Author.class.getDeclaredFields());
+        setAccessbility(authorFields);
         setAccessbility(creditCardFields);
         setAccessbility(orderFields);
         setAccessbility(checkoutFields);
@@ -127,5 +129,10 @@ public class ResultSetParser<T> {
         CreditCard card = new CreditCard();
         setAllFields(rs,card ,creditCardFields);
         return card;
+    }
+    public Author retrieveAuthor(ResultSet set) throws InvocationTargetException, SQLException, InstantiationException, NoSuchMethodException, IllegalAccessException {
+        Author author = new Author();
+        setAllFields(set,author , authorFields);
+        return author;
     }
 }

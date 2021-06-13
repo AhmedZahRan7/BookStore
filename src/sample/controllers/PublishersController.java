@@ -1,8 +1,7 @@
 package sample.controllers;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -11,11 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.callBacks.IUserCallBack;
+import sample.models.Author;
 import sample.models.Book;
 import sample.models.Publisher;
 import sample.models.User;
 import sample.viewmodels.ManagerViewModel;
 import sample.views.ViewsSwitcher;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,173 +30,213 @@ public class PublishersController {
     @FXML Button addButton;
     @FXML Button backButton;
     @FXML Button deleteButton;
-    @FXML TableView publishersTable;
-    ObservableList<Publisher> data = FXCollections.observableArrayList(new ArrayList<>());
+    @FXML TextField deleteAuthorNameField;
+    @FXML TextField addAuthorNameField;
+    @FXML Button addAuthorButton;
+    @FXML Button deleteAuthorButton;
+    @FXML TableView<Publisher> publishersTable;
+    @FXML TableView<Author> authorsTable;
+    ObservableList<Publisher> publishersData = FXCollections.observableArrayList(new ArrayList<>());
+    ObservableList<Author> authorsData = FXCollections.observableArrayList(new ArrayList<>());
     public void initialize(){
-        initializeTable();
-        setTableData();
-        publishersTable.setItems(data);
+        initializePublishersTable();
+        setPublishersTableData();
+        publishersTable.setItems(publishersData);
+        initializeAuthorTable();
+        setAuthorsTableData();
+        authorsTable.setItems(authorsData);
         initializeButtonsFunctions();
     }
-    private void initializeTable(){
+    private void initializePublishersTable(){
         TableColumn<Publisher,String> id = new TableColumn<>("ID");
         TableColumn<Publisher,String> name = new TableColumn<>("Name");
         TableColumn<Publisher,String> address = new TableColumn<>("Address");
         TableColumn<Publisher,String> phone = new TableColumn<>("Phone");
-        id.setMinWidth(100);
+        id.setMinWidth(20);
         name.setMinWidth(100);
         address.setMinWidth(100);
         phone.setMinWidth(100);
-        id.setCellValueFactory(new PropertyValueFactory<Publisher,String>("publisher_id"));
-        name.setCellValueFactory(new PropertyValueFactory<Publisher,String>("publisher_name"));
-        address.setCellValueFactory(new PropertyValueFactory<Publisher,String>("Address"));
-        phone.setCellValueFactory(new PropertyValueFactory<Publisher,String>("phoneNumber"));
+        id.setCellValueFactory(new PropertyValueFactory<>("publisher_id"));
+        name.setCellValueFactory(new PropertyValueFactory<>("publisher_name"));
+        address.setCellValueFactory(new PropertyValueFactory<>("Address"));
+        phone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         publishersTable.getColumns().addAll(id,name,address,phone);
     }
-    void setTableData(){
-        data.clear();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ManagerViewModel.get_instance().getAllPublishers(new IUserCallBack() {
-                        @Override
-                        public void onSuccess(User user) {
+    private void setPublishersTableData(){
+        publishersData.clear();
+        new Thread(() -> {
+            try {
+                ManagerViewModel.get_instance().getAllPublishers(new IUserCallBack() {
+                    @Override
+                    public void onSuccess(User user) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(Book book) {
+                    @Override
+                    public void onSuccess(Book book) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(List<Object> publishers) {
-                            for(Object o : publishers) data.add((Publisher) o);
-                        }
+                    @Override
+                    public void onSuccess(List<Object> publishers) {
+                        for(Object o : publishers) publishersData.add((Publisher) o);
+                    }
 
-                        @Override
-                        public void onSuccess() throws SQLException, ClassNotFoundException {
+                    @Override
+                    public void onSuccess() {
 
-                        }
+                    }
 
-                        @Override
-                        public void onFailure() {
+                    @Override
+                    public void onFailure() {
 
-                        }
-                    });
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                    }
+                });
+            } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException throwable) {
+                throwable.printStackTrace();
+            }
+        }).start();
+    }
+    private void initializeAuthorTable(){
+        TableColumn<Author,String> id = new TableColumn<>("ID");
+        TableColumn<Author,String> name = new TableColumn<>("Name");
+        id.setMinWidth(20);
+        name.setMinWidth(100);
+        id.setCellValueFactory(new PropertyValueFactory<>("author_id"));
+        name.setCellValueFactory(new PropertyValueFactory<>("author_Name"));
+        authorsTable.getColumns().addAll(id,name);
+    }
+    private void setAuthorsTableData(){
+        authorsData.clear();
+        new Thread(() -> {
+            try {
+                ManagerViewModel.get_instance().getAllPublishers(new IUserCallBack() {
+                    @Override
+                    public void onSuccess(User user) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Book book) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Object> authors) {
+                        for(Object o : authors) authorsData.add((Author) o);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
+            } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException throwable) {
+                throwable.printStackTrace();
             }
         }).start();
     }
     void initializeButtonsFunctions(){
         backButton.setStyle("-fx-background-color: #FFCA33;");
-        backButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ViewsSwitcher.getInstance().switchTo((Stage)
-                        backButton.getScene().getWindow(),"admin");
+        backButton.setOnAction(actionEvent -> ViewsSwitcher.getInstance().switchTo((Stage)
+                backButton.getScene().getWindow(),"admin"));
+        addButton.setOnAction(actionEvent -> {
+            try {
+                ManagerViewModel.get_instance().addPublisher(
+                        publisherAddressField.getText().trim(),
+                        publisherNameField.getText().trim(),
+                        publisherPhoneField.getText().trim(),
+                        new IUserCallBack() {
+                            @Override
+                            public void onSuccess(User user) {
 
-            }
-        });
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            //phone not handled
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    ManagerViewModel.get_instance().addPublisher(
-                            publisherAddressField.getText().trim(),
-                            publisherNameField.getText().trim(),
-                            publisherPhoneField.getText().trim(),
-                            new IUserCallBack() {
-                                @Override
-                                public void onSuccess(User user) {
-
-                                }
-
-                                @Override
-                                public void onSuccess(Book book) {
-
-                                }
-
-                                @Override
-                                public void onSuccess(List<Object> data) {
-
-                                }
-
-                                @Override
-                                public void onSuccess() throws SQLException, ClassNotFoundException {
-                                    publisherAddressField.setText("");
-                                    publisherNameField.setText("");
-                                    publisherPhoneField.setText("");
-                                    ViewsSwitcher.showSuccess("Added");
-                                    setTableData();
-                                }
-
-                                @Override
-                                public void onFailure() {
-
-                                }
                             }
-                    );
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+
+                            @Override
+                            public void onSuccess(Book book) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(List<Object> data) {
+
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                publisherAddressField.setText("");
+                                publisherNameField.setText("");
+                                publisherPhoneField.setText("");
+                                ViewsSwitcher.showSuccess("Added");
+                                setPublishersTableData();
+                            }
+
+                            @Override
+                            public void onFailure() {
+
+                            }
+                        }
+                );
+            } catch (SQLException | ClassNotFoundException throwable) {
+                throwable.printStackTrace();
             }
         });
-        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    ManagerViewModel.get_instance().removePublisher(publisherIdField.getText().trim(), new IUserCallBack() {
-                        @Override
-                        public void onSuccess(User user) {
+        deleteButton.setOnAction(actionEvent -> {
+            try {
+                ManagerViewModel.get_instance().removePublisher(publisherIdField.getText().trim(), new IUserCallBack() {
+                    @Override
+                    public void onSuccess(User user) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(Book book) {
+                    @Override
+                    public void onSuccess(Book book) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(List<Object> data) {
+                    @Override
+                    public void onSuccess(List<Object> data) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess() throws SQLException, ClassNotFoundException {
-                            ViewsSwitcher.showSuccess("Deleted");
-                            publisherIdField.setText("");
-                            setTableData();
-                        }
+                    @Override
+                    public void onSuccess() {
+                        ViewsSwitcher.showSuccess("Deleted");
+                        publisherIdField.setText("");
+                        setPublishersTableData();
+                    }
 
-                        @Override
-                        public void onFailure() {
+                    @Override
+                    public void onFailure() {
 
-                        }
-                    });
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                    }
+                });
+            } catch (SQLException | ClassNotFoundException throwable) {
+                throwable.printStackTrace();
             }
         });
+
+        addAuthorButton.setOnAction(actionEvent -> {
+            try {
+                ManagerViewModel.get_instance().addAuthor(addAuthorNameField.getText().trim());
+            } catch (SQLException | ClassNotFoundException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+
+        deleteAuthorButton.setOnAction(actionEvent -> {
+//            try {
+//                ManagerViewModel.get_instance().removeAuthor();
+//            } catch (SQLException | ClassNotFoundException throwables) {
+//                throwables.printStackTrace();
+//            }
+        });
+
     }
 
 }
